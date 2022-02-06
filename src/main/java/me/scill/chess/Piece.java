@@ -11,6 +11,20 @@ public abstract class Piece {
 		this.side = side;
 	}
 
+	public boolean isValidPlay(SquareTile position) {
+		// Checks if the Piece can move to that square.
+		if (!isValidMove(position))
+			return false;
+
+		// Does the square have a Piece on it?
+		if (position.getPiece() != null)
+			// If so, make sure they're on different sides.
+			return side != position.getPiece().getSide();
+
+		// Square is valid.
+		return true;
+	}
+
 	public abstract boolean isValidMove(SquareTile position);
 
 	public SquareTile getPosition() {
