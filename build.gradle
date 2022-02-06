@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'me.scill.chess'
+version '1.0.0-alpha'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'junit:junit:4.13.2'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs= ["src/main/java"]
+        }
+        resources {
+            srcDirs= ["src/main/resources"]
+        }
+    }
+}
