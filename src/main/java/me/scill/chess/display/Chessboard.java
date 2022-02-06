@@ -7,6 +7,8 @@ import java.awt.*;
 public class Chessboard extends Display {
 
 	private final Board board;
+	private final Color WHITE = new Color(Integer.parseInt("E4E9F7", 16)),
+						BLUE = new Color(Integer.parseInt("77AADC", 16));
 
 	public Chessboard(Board board) {
 		super("Chess");
@@ -32,13 +34,13 @@ public class Chessboard extends Display {
 				Color panelColor;
 				boolean doSwitchColor = row % 2 == 0;
 
-				// Even = Black, Odd = White
-				if (column % 2 == 0) panelColor = Color.WHITE;
-				else panelColor = Color.GREEN;
+				// Even = White, Odd = Blue
+				if (column % 2 == 0) panelColor = WHITE;
+				else panelColor = BLUE;
 
 				// Switch colors every row
 				if (doSwitchColor)
-					panelColor = panelColor == Color.WHITE ? Color.GREEN : Color.WHITE;
+					panelColor = panelColor == WHITE ? BLUE : WHITE;
 
 				// Creates a position, and adds a click listener to it
 				SquareTile position = new SquareTile(board.getSIZE() - row, column, panelColor);
