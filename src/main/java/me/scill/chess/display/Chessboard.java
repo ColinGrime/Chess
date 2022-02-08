@@ -2,7 +2,10 @@ package me.scill.chess.display;
 
 import me.scill.chess.board.Board;
 
+import javax.sound.sampled.*;
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Chessboard extends Display {
 
@@ -13,6 +16,25 @@ public class Chessboard extends Display {
 	public Chessboard(Board board) {
 		super("Chess");
 		this.board = board;
+
+		try {
+			// Open an audio input stream.
+			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./music/KissTheSky.wav");
+
+			if (inputStream == null) {
+				System.out.println("[Error] Music file location is invalid.");
+				return;
+			}
+
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(inputStream);
+			// Get a sound clip resource.
+			Clip clip = AudioSystem.getClip();
+			// Open audio clip and load samples from the audio input stream.
+			clip.open(audioIn);
+			clip.start();
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
