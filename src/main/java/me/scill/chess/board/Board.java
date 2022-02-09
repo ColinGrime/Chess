@@ -12,9 +12,7 @@ public class Board {
 	private final int SIZE = 8;
 	private final List<SquareTile> tiles = new ArrayList<>();
 
-	public Board() {
-
-	}
+	public Board() {}
 
 	public void setupBoard() {
 		createSide(Side.WHITE);
@@ -61,7 +59,8 @@ public class Board {
 				return pos;
 		}
 
-		return null;
+		// If the tile isn't found, returns the first tile (bottom left).
+		return new SquareTile(this, 1, 'a');
 	}
 
 	public int getSIZE() {
