@@ -6,6 +6,8 @@ import me.scill.chess.display.SquareTile;
 
 public class Pawn extends Piece {
 
+	private boolean isFirstMove = true;
+
 	public Pawn(Side side) {
 		super(side);
 	}
@@ -38,9 +40,14 @@ public class Pawn extends Piece {
 	 * Black pieces move down.
 	 */
 	private boolean isRightDirection(int fromRow, int toRow) {
-		if (getSide() == Side.WHITE)
-			return toRow - fromRow == 1;
-		else
-			return fromRow - toRow == 1;
+		// Gets how far the Pawn has moved depending on its side.
+		int diff = getSide() == Side.WHITE ? toRow - fromRow : fromRow - toRow;
+
+		if (diff == 2 && isFirstMove) {
+			isFirstMove = false;
+			return true;
+		}
+
+		return diff == 1;
 	}
 }
