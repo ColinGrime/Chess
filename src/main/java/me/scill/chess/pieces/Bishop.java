@@ -4,6 +4,8 @@ import me.scill.chess.Piece;
 import me.scill.chess.Side;
 import me.scill.chess.display.SquareTile;
 
+import java.util.List;
+
 public class Bishop extends Piece {
 
 	public Bishop(Side side) {
@@ -11,10 +13,21 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(SquareTile position) {
-		int rowDifference = Math.abs(position.getRowPos() - getPosition().getRowPos());
-		int columnDifference = Math.abs(position.getColumnPos() - getPosition().getColumnPos());
+	public boolean isValidMove(SquareTile tile, int rowDiff, int columnDiff) {
+		// The move is diagonal.
+		return rowDiff == columnDiff;
+	}
 
-		return (rowDifference == columnDifference) && (rowDifference >= 1);
+	@Override
+	public boolean isBlocked(SquareTile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+		List<SquareTile> tiles = tile.getBoard().getTiles();
+		int row = tile.getRowPos();
+		int column = tile.getColumnPos();
+
+		// Returns true if a space in between has a piece on it.
+		return tiles.stream()
+				.filter(t -> t.getRowPos() > rowIndex[0] && t.getRowPos() < rowIndex[1])
+				.filter(t -> t.getColumnPos() > columnIndex[0] && t.getColumnPos() < columnIndex[1])
+				.anyMatch(t -> Math.abs(t.getRowPos() - row) == Math.abs(t.getColumnPos() - column) && t.getPiece() != null);
 	}
 }

@@ -11,10 +11,13 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(SquareTile position) {
-		int rowDifference = Math.abs(position.getRowPos() - getPosition().getRowPos());
-		int columnDifference = Math.abs(position.getColumnPos() - getPosition().getColumnPos());
+	public boolean isValidMove(SquareTile tile, int rowDiff, int columnDiff) {
+		// King can move 1 space in any direction, even diagonal.
+		return rowDiff <= 1 && columnDiff <= 1;
+	}
 
-		return rowDifference <= 1 && columnDifference <= 1;
+	@Override
+	public boolean isBlocked(SquareTile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+		return false;
 	}
 }

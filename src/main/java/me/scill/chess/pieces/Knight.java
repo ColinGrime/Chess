@@ -11,12 +11,13 @@ public class Knight extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(SquareTile position) {
-		int rowDifference = Math.abs(position.getRowPos() - getPosition().getRowPos());
-		int columnDifference = Math.abs(position.getColumnPos() - getPosition().getColumnPos());
+	public boolean isValidMove(SquareTile tile, int rowDiff, int columnDiff) {
+		// The move is a "L" shape.
+		return (rowDiff == 2 && columnDiff == 1) || (rowDiff == 1 && columnDiff == 2);
+	}
 
-		if (rowDifference == 2 && columnDifference == 1)
-			return true;
-		return rowDifference == 1 && columnDifference == 2;
+	@Override
+	public boolean isBlocked(SquareTile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+		return false;
 	}
 }
