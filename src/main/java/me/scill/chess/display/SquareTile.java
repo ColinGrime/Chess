@@ -85,7 +85,7 @@ public class SquareTile extends JButton implements ActionListener {
 		BufferedImage bufferedImage = null;
 		try {
 			// Retrieves the path of the image, and its InputStream.
-			String imagePath = "/images/" + piece.getClass().getSimpleName() + ".png";
+			String imagePath = "/images/" + piece.getSide().name().toLowerCase() + "/" + piece.getClass().getSimpleName() + ".png";
 			InputStream inputStream = getClass().getResourceAsStream(imagePath);
 
 			// Returns if the InputStream is invalid.
