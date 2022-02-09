@@ -2,6 +2,7 @@ package me.scill.chess.display;
 
 import me.scill.chess.Piece;
 import me.scill.chess.StretchIcon;
+import me.scill.chess.board.Board;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,17 +15,20 @@ import java.io.InputStream;
 
 public class SquareTile extends JButton implements ActionListener {
 
+
 	private static SquareTile currentlySelected = null;
 
+	private final Board board;
 	private final int rowPos;
 	private final char columnPos;
 	private Piece piece;
 
-	public SquareTile(int rowPos, char columnPos) {
-		this(rowPos, columnPos, Color.WHITE);
+	public SquareTile(Board board, int rowPos, char columnPos) {
+		this(board, rowPos, columnPos, Color.WHITE);
 	}
 
-	public SquareTile(int rowPos, char columnPos, Color color) {
+	public SquareTile(Board board, int rowPos, char columnPos, Color color) {
+		this.board = board;
 		this.rowPos = rowPos;
 		this.columnPos = columnPos;
 
@@ -51,6 +55,10 @@ public class SquareTile extends JButton implements ActionListener {
 			currentlySelected = this;
 	}
 
+	public Board getBoard() {
+		return board;
+	}
+
 	public int getRowPos() {
 		return rowPos;
 	}
@@ -71,7 +79,7 @@ public class SquareTile extends JButton implements ActionListener {
 			return;
 		}
 
-		this.piece.setPosition(this);
+		this.piece.setTile(this);
 		setSize(50, 50);
 
 		BufferedImage bufferedImage = null;
@@ -89,16 +97,6 @@ public class SquareTile extends JButton implements ActionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		// todo figure out how to change colors of the pieces
-//		for (int y = 0; y < bufferedImage.getHeight(); y++)
-//			for (int x = 0; x < bufferedImage.getWidth(); x++)
-//			{
-//				Color imageColor = new Color(bufferedImage.getRGB(x, y));
-////				System.out.println("COLOR = " + imageColor + ", ID = " + imageColor.getRGB());
-//				if (imageColor.getRGB() == -1)
-//					bufferedImage.setRGB(x, y, -16777216);
-//			}
 
 		// Returns if the BufferedImage failed to read.
 		if (bufferedImage == null)
