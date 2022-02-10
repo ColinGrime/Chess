@@ -16,7 +16,8 @@ import java.io.InputStream;
 public class SquareTile extends JButton implements ActionListener {
 
 
-	private static SquareTile currentlySelected = null;
+	private static SquareTile selectedSquare = null;
+	private static Color selectedColor = null;
 
 	private final Board board;
 	private final int rowPos;
@@ -40,19 +41,35 @@ public class SquareTile extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Piece piece = getPiece();
+		// One of the squares is selected.
+		if (selectedSquare != null) {
+			boolean isAlly = false;
 
-		if (currentlySelected == this)
-			return;
+			// If the clicked-on square has a Piece that exists, check if it's an ally.
+			if (selectedSquare != this && getPiece() != null)
+				isAlly = selectedSquare.getPiece().getSide() == getPiece().getSide();
 
-		if (currentlySelected != null && currentlySelected.getPiece().isValidPlay(this)) {
-			setPiece(currentlySelected.getPiece());
-			currentlySelected.setPiece(null);
-			currentlySelected = null;
+			// If's a valid move, play it.
+			if (!isAlly && selectedSquare.getPiece().isValidPlay(this)) {
+				setPiece(selectedSquare.getPiece());
+				selectedSquare.setPiece(null);
+			}
+
+			// Removes the highlight and de-selects the selected square.
+			selectedSquare.setBackground(selectedColor);
+			selectedSquare = null;
+
+			// Return if the clicked-on square is NOT an ally.
+			if (!isAlly)
+				return;
 		}
 
-		else if (piece != null)
-			currentlySelected = this;
+		// If the clicked-on square has a Piece that exists, select it.
+		if (getPiece() != null) {
+			selectedSquare = this;
+			selectedColor = getBackground();
+			setBackground(Color.YELLOW);
+		}
 	}
 
 	public Board getBoard() {
@@ -79,10 +96,9 @@ public class SquareTile extends JButton implements ActionListener {
 			return;
 		}
 
-		this.piece.setTile(this);
-		setSize(50, 50);
-
+		piece.setTile(this);
 		BufferedImage bufferedImage = null;
+
 		try {
 			// Retrieves the path of the image, and its InputStream.
 			String imagePath = "/images/" + piece.getSide().name().toLowerCase() + "/" + piece.getClass().getSimpleName() + ".png";
