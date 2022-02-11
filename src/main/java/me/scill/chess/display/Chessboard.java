@@ -2,43 +2,40 @@ package me.scill.chess.display;
 
 import me.scill.chess.board.Board;
 
-import javax.sound.sampled.*;
+import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 
-public class Chessboard extends Display {
+public class Chessboard extends JPanel {
 
 	private final Board board;
 	private final Color WHITE = new Color(Integer.parseInt("E4E9F7", 16)),
 						BLUE = new Color(Integer.parseInt("77AADC", 16));
 
 	public Chessboard(Board board) {
-		super("Chess");
 		this.board = board;
+		setup();
 
-		try {
-			// Open an audio input stream.
-			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./music/KissTheSky.wav");
-
-			if (inputStream == null) {
-				System.out.println("[Error] Music file location is invalid.");
-				return;
-			}
-
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(inputStream);
-			// Get a sound clip resource.
-			Clip clip = AudioSystem.getClip();
-			// Open audio clip and load samples from the audio input stream.
-			clip.open(audioIn);
-			clip.start();
-		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			// Open an audio input stream.
+//			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./music/KissTheSky.wav");
+//
+//			if (inputStream == null) {
+//				System.out.println("[Error] Music file location is invalid.");
+//				return;
+//			}
+//
+//			AudioInputStream audioIn = AudioSystem.getAudioInputStream(inputStream);
+//			// Get a sound clip resource.
+//			Clip clip = AudioSystem.getClip();
+//			// Open audio clip and load samples from the audio input stream.
+//			clip.open(audioIn);
+//			clip.start();
+//		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+//			e.printStackTrace();
+//		}
 	}
 
-	@Override
-	protected void init() {
+	private void setup() {
 		// Tiles x Tiles
 		setLayout(new GridLayout(board.getSIZE(), board.getSIZE()));
 
@@ -47,7 +44,7 @@ public class Chessboard extends Display {
 		board.setupBoard();
 
 		// Re-sizes the pieces to fit the board.
-		pack();
+//		pack();
 	}
 
 	private void setupGrid() {
