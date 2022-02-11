@@ -1,59 +1,67 @@
 package me.scill.chess.display;
 
+import me.scill.chess.enums.Fonts;
+import me.scill.chess.utilities.SwingUtility;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
-public class MainMenu extends Display {
+public class MainMenu extends JPanel {
 
-	public MainMenu(String title) {
-		super(title);
+	private final Display display;
+
+	public MainMenu(Display display) {
+		this.display = display;
+		setup();
 	}
 
-	@Override
-	protected void init() {
-		// Creates a JPanel with the BorderLayout.
-		JPanel panel = new JPanel(new BorderLayout(100, 100));
-		panel.setBackground(Color.BLACK);
+	protected void setup() {
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setBackground(Color.decode("#E5E5DC"));
+
+//		// Creates a JLabel holding the chess logo.
+//		JLabel logo = new JLabel();
+//		logo.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//		// Sets the image to the icon.
+//		Image image = ImageUtility.getImage("Logo.png", 200, 200);
+//		if (image != null)
+//			logo.setIcon(new ImageIcon(image));
 
 		// Adds JLabel text to the screen.
-		JLabel title = createText("Chess", Color.WHITE, "SourceSansPro", 200);
-		title.setHorizontalAlignment(JLabel.CENTER);
+		JLabel title = createText("Chess", Color.decode("#26495C"), Fonts.SourceSansPro, 200);
+		title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		panel.add(title, BorderLayout.NORTH);
-		panel.add(createButton("Click to Start!", Color.BLUE, "Raleway", 75));
+		JButton singleplayer = createButton("Singleplayer", Color.decode("#C4A35A"), Fonts.Raleway, 75);
+		singleplayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		// Adds the JPanel to the current JFrame instance.
-		add(panel);
+		JButton multiplayer = createButton("Multiplayer", Color.decode("#C4A35A"), Fonts.Raleway, 75);
+		multiplayer.setAlignmentX(Component.CENTER_ALIGNMENT);
+		multiplayer.addActionListener(e -> display.displayChessboard());
+
+		add(Box.createRigidArea(new Dimension(0, 60)));
+		add(title);
+		add(Box.createRigidArea(new Dimension(0, 40)));
+		add(singleplayer);
+		add(Box.createRigidArea(new Dimension(0, 10)));
+		add(multiplayer);
 	}
 
-	private JLabel createText(String text, Color color, String fontName, float size) {
+	private JLabel createText(String text, Color color, Fonts fontType, float size) {
 		JLabel title = new JLabel(text);
 		title.setForeground(color);
-
-		try {
-			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/" + fontName + ".ttf"));
-			title.setFont(font.deriveFont(size));
-		} catch (FontFormatException | IOException e) {
-			e.printStackTrace();
-		}
-
+		title.setFont(SwingUtility.createFont(fontType, size));
 		return title;
 	}
 
-	private JButton createButton(String text, Color color, String fontName, float size) {
-		JButton title = new JButton(text);
-		title.setForeground(color);
-		title.setOpaque(true);
-		title.setPreferredSize(new Dimension(40, 40));
-
-		try {
-			Font font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fonts/" + fontName + ".ttf"));
-			title.setFont(font.deriveFont(size));
-		} catch (FontFormatException | IOException e) {
-			e.printStackTrace();
-		}
-
-		return title;
+	private JButton createButton(String text, Color color, Fonts fontType, float size) {
+		JButton button = new JButton(text);
+		button.setForeground(color);
+		button.setContentAreaFilled(false);
+		button.setFocusPainted(false);
+		button.setOpaque(false);
+		button.setMargin(new Insets(10, 10, 10, 10));
+		button.setFont(SwingUtility.createFont(fontType, size));
+		return button;
 	}
 }
