@@ -1,7 +1,8 @@
 package me.scill.chess.board;
 
+import me.scill.chess.Player;
 import me.scill.chess.Side;
-import me.scill.chess.display.SquareTile;
+import me.scill.chess.display.Tile;
 import me.scill.chess.pieces.*;
 
 import java.util.ArrayList;
@@ -10,7 +11,12 @@ import java.util.List;
 public class Board {
 
 	private final int SIZE = 8;
-	private final List<SquareTile> tiles = new ArrayList<>();
+	private final List<Tile> tiles = new ArrayList<>();
+
+	private final Player player1 = new Player("White", Side.WHITE);
+	private final Player player2 = new Player("Black", Side.BLACK);
+
+	private Side currentTurn = Side.WHITE;
 
 	public Board() {}
 
@@ -53,21 +59,29 @@ public class Board {
 	/*
 	 * Gets the position given the row and column.
 	 */
-	private SquareTile getTile(int row, char column) {
-		for (SquareTile pos : tiles) {
+	private Tile getTile(int row, char column) {
+		for (Tile pos : tiles) {
 			if (pos.getRowPos() == row && pos.getColumnPos() == column)
 				return pos;
 		}
 
 		// If the tile isn't found, returns the first tile (bottom left).
-		return new SquareTile(this, 1, 'a');
+		return new Tile(this, 1, 'a');
 	}
 
 	public int getSIZE() {
 		return SIZE;
 	}
 
-	public List<SquareTile> getTiles() {
+	public List<Tile> getTiles() {
 		return tiles;
+	}
+
+	public Side getCurrentTurn() {
+		return currentTurn;
+	}
+
+	public void nextTurn() {
+		currentTurn = currentTurn == Side.WHITE ? Side.BLACK : Side.WHITE;
 	}
 }
