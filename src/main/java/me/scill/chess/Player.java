@@ -1,5 +1,7 @@
 package me.scill.chess;
 
+import me.scill.chess.enums.Side;
+
 public class Player {
 
 	// add data into it later

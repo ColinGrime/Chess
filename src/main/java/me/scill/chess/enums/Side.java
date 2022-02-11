@@ -1,4 +1,4 @@
-package me.scill.chess;
+package me.scill.chess.enums;
 
 public enum Side {
 

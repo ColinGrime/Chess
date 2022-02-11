@@ -1,7 +1,7 @@
 package me.scill.chess.pieces;
 
 import me.scill.chess.board.Piece;
-import me.scill.chess.Side;
+import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
 
 public class King extends Piece {

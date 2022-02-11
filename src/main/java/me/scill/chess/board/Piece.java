@@ -1,6 +1,6 @@
 package me.scill.chess.board;
 
-import me.scill.chess.Side;
+import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
 
 public abstract class Piece {
