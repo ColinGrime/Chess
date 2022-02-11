@@ -6,16 +6,14 @@ import me.scill.chess.display.Tile;
 
 public class Pawn extends Piece {
 
-	private boolean isFirstMove = true;
-
 	public Pawn(Side side) {
 		super(side);
 	}
 
 	@Override
 	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
-		int fromRow = getTile().getRowPos();
-		int toRow = tile.getRowPos();
+		int fromRow = getTile().getRow();
+		int toRow = tile.getRow();
 
 		// The move has a piece on it.
 		if (tile.getPiece() != null)
@@ -26,12 +24,18 @@ public class Pawn extends Piece {
 		if (columnDiff >= 1)
 			return false;
 
+		if (tile.getRow() == 5 && tile.getColumn() == 'c') {
+			System.out.println("FROM = " + fromRow);
+			System.out.println("TO = " + toRow);
+			System.out.println("THIS = " + isRightDirection(fromRow, toRow, false));
+		}
+
 		// The move is valid.
 		return isRightDirection(fromRow, toRow, false);
 	}
 
 	@Override
-	public boolean isBlocked(Tile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
 		return false;
 	}
 
@@ -42,20 +46,11 @@ public class Pawn extends Piece {
 	private boolean isRightDirection(int fromRow, int toRow, boolean isAttacking) {
 		// Gets how far the Pawn has moved depending on its side.
 		int diff = getSide() == Side.WHITE ? toRow - fromRow : fromRow - toRow;
-		boolean isRight = false;
 
 		// Pawns can move 2 spaces on the first turn if it's normal.
-		if (!isAttacking && diff == 2 && isFirstMove)
-			isRight = true;
+		if (!isAttacking && diff == 2 && getTimesMoved() == 0)
+			return true;
 
-		// Pawns can always move 1 space in the right direction!
-		else if (diff == 1)
-			isRight = true;
-
-		// The direction is right, so it moves.
-		if (isFirstMove && isRight)
-			isFirstMove = false;
-
-		return isRight;
+		return diff == 1;
 	}
 }

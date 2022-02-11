@@ -17,7 +17,7 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean isBlocked(Tile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
 		return false;
 	}
 }

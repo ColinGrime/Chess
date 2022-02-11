@@ -1,10 +1,8 @@
 package me.scill.chess.pieces;
 
 import me.scill.chess.board.Piece;
-import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
-
-import java.util.List;
+import me.scill.chess.enums.Side;
 
 public class Queen extends Piece {
 
@@ -18,42 +16,21 @@ public class Queen extends Piece {
 		if (rowDiff == columnDiff)
 			return true;
 
-		// Queen either moves its row OR column.
-		return !(rowDiff >= 1 && columnDiff >= 1);
+		// Queen either moves its row OR column, but not both.
+		return rowDiff >= 1 ^ columnDiff >= 1;
 	}
 
 	@Override
-	public boolean isBlocked(Tile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
-		List<Tile> tiles = tile.getBoard().getTiles();
-		int row = tile.getRowPos();
-		int column = tile.getColumnPos();
+	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
+		// Diagonal movement.
+		if (hasMovedRow && hasMovedColumn)
+			return isRowBlocked && isColumnBlocked;
 
-		// The Queen moved diagonal.
-		if (rowDiff == columnDiff) {
-			// Returns true if a space in between has a piece on it.
-			return tiles.stream()
-					.filter(t -> t.getRowPos() > rowIndex[0] && t.getRowPos() < rowIndex[1])
-					.filter(t -> t.getColumnPos() > columnIndex[0] && t.getColumnPos() < columnIndex[1])
-					.anyMatch(t -> Math.abs(t.getRowPos() - row) == Math.abs(t.getColumnPos() - column) && t.getPiece() != null);
-		}
+		// Row movement.
+		else if (hasMovedRow)
+			return isRowBlocked;
 
-		// The Queen moved its row.
-		if (rowDiff > 1) {
-			// Returns true if a space in between has a piece on it.
-			return tiles.stream()
-					.filter(t -> t.getRowPos() > rowIndex[0] && t.getRowPos() < rowIndex[1])
-					.anyMatch(t -> t.getColumnPos() == column && t.getPiece() != null);
-		}
-
-		// The Queen moved its column.
-		else if (columnDiff > 1) {
-			// Returns true if a space in between has a piece on it.
-			return tiles.stream()
-					.filter(t -> t.getColumnPos() > columnIndex[0] && t.getColumnPos() < columnIndex[1])
-					.anyMatch(t -> t.getRowPos() == row && t.getPiece() != null);
-		}
-
-		// Path isn't blocked.
-		return false;
+		// Column movement.
+		return isColumnBlocked;
 	}
 }
