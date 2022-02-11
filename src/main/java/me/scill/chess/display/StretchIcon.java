@@ -1,4 +1,4 @@
-package me.scill.chess;
+package me.scill.chess.display;
 
 import java.awt.Component;
 import java.awt.Container;

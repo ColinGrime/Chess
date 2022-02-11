@@ -1,17 +1,18 @@
-package me.scill.chess;
+package me.scill.chess.board;
 
-import me.scill.chess.display.SquareTile;
+import me.scill.chess.Side;
+import me.scill.chess.display.Tile;
 
 public abstract class Piece {
 
 	private final Side side;
-	private SquareTile tile;
+	private Tile tile;
 
 	public Piece(Side side) {
 		this.side = side;
 	}
 
-	public boolean isValidPlay(SquareTile tile) {
+	public boolean isValidPlay(Tile tile) {
 		// Row and column differences
 		int rowDiff = Math.abs(tile.getRowPos() - getTile().getRowPos());
 		int columnDiff = Math.abs(tile.getColumnPos() - getTile().getColumnPos());
@@ -33,26 +34,17 @@ public abstract class Piece {
 			return false;
 
 		// Checks if the Piece can move to that square.
-		if (!isValidMove(tile, rowDiff, columnDiff))
-			return false;
-
-		// Does the square have a Piece on it?
-		if (tile.getPiece() != null)
-			// If so, make sure they're on different sides.
-			return side != tile.getPiece().getSide();
-
-		// The play is valid.
-		return true;
+		return isValidMove(tile, rowDiff, columnDiff);
 	}
 
-	public abstract boolean isValidMove(SquareTile tile, int rowDiff, int columnDiff);
-	public abstract boolean isBlocked(SquareTile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex);
+	public abstract boolean isValidMove(Tile tile, int rowDiff, int columnDiff);
+	public abstract boolean isBlocked(Tile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex);
 
-	public SquareTile getTile() {
+	public Tile getTile() {
 		return tile;
 	}
 
-	public void setTile(SquareTile tile) {
+	public void setTile(Tile tile) {
 		this.tile = tile;
 	}
 

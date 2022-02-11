@@ -1,8 +1,8 @@
 package me.scill.chess.pieces;
 
-import me.scill.chess.Piece;
+import me.scill.chess.board.Piece;
 import me.scill.chess.Side;
-import me.scill.chess.display.SquareTile;
+import me.scill.chess.display.Tile;
 
 public class Pawn extends Piece {
 
@@ -13,7 +13,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(SquareTile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
 		int fromRow = getTile().getRowPos();
 		int toRow = tile.getRowPos();
 
@@ -31,7 +31,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean isBlocked(SquareTile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+	public boolean isBlocked(Tile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
 		return false;
 	}
 

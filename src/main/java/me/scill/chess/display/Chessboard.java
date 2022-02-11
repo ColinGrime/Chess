@@ -65,7 +65,7 @@ public class Chessboard extends Display {
 					panelColor = panelColor == WHITE ? BLUE : WHITE;
 
 				// Creates a position, and adds a click listener to it
-				SquareTile position = new SquareTile(board, board.getSIZE() - row, column, panelColor);
+				Tile position = new Tile(board, board.getSIZE() - row, column, panelColor);
 
 				// Add the position to the board, and the panel to the display
 				board.getTiles().add(position);

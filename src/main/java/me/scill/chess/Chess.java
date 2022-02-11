@@ -6,7 +6,6 @@ import me.scill.chess.display.Chessboard;
 public class Chess {
 
 	/*
-	 * Pawns can move 1/2 spaces in the beginning, 1 otherwise.
 	 * Each turn, switch board around to let the other player go.
 	 * Player can click and move, and has option to see all possible moves.
 	 */

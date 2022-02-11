@@ -1,8 +1,8 @@
 package me.scill.chess.pieces;
 
-import me.scill.chess.Piece;
+import me.scill.chess.board.Piece;
 import me.scill.chess.Side;
-import me.scill.chess.display.SquareTile;
+import me.scill.chess.display.Tile;
 
 public class King extends Piece {
 
@@ -11,13 +11,13 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(SquareTile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
 		// King can move 1 space in any direction, even diagonal.
 		return rowDiff <= 1 && columnDiff <= 1;
 	}
 
 	@Override
-	public boolean isBlocked(SquareTile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+	public boolean isBlocked(Tile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
 		return false;
 	}
 }

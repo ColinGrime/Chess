@@ -1,8 +1,8 @@
 package me.scill.chess.pieces;
 
-import me.scill.chess.Piece;
+import me.scill.chess.board.Piece;
 import me.scill.chess.Side;
-import me.scill.chess.display.SquareTile;
+import me.scill.chess.display.Tile;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(SquareTile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
 		// Rook either moves its row OR column.
 		return !(rowDiff >= 1 && columnDiff >= 1);
 	}
 
 	@Override
-	public boolean isBlocked(SquareTile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
-		List<SquareTile> tiles = tile.getBoard().getTiles();
+	public boolean isBlocked(Tile tile, int rowDiff, int columnDiff, int[] rowIndex, int[] columnIndex) {
+		List<Tile> tiles = tile.getBoard().getTiles();
 		int row = tile.getRowPos();
 		int column = tile.getColumnPos();
 
