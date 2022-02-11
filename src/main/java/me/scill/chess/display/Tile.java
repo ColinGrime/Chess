@@ -8,26 +8,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tile extends JButton implements ActionListener {
 
 
 	private static Tile selectedTile = null;
 	private static Color selectedColor = null;
+	private static List<Tile> tilesInRange = new ArrayList<>();
 
 	private final Board board;
-	private final int rowPos;
-	private final char columnPos;
+	private final int row;
+	private final char column;
 	private Piece piece;
 
-	public Tile(Board board, int rowPos, char columnPos) {
-		this(board, rowPos, columnPos, Color.WHITE);
+	public Tile(Board board, int row, char column) {
+		this(board, row, column, Color.WHITE);
 	}
 
-	public Tile(Board board, int rowPos, char columnPos, Color color) {
+	public Tile(Board board, int row, char column, Color color) {
 		this.board = board;
-		this.rowPos = rowPos;
-		this.columnPos = columnPos;
+		this.row = row;
+		this.column = column;
 
 		setBackground(color);
 		setOpaque(true);
@@ -47,7 +50,8 @@ public class Tile extends JButton implements ActionListener {
 				isAlly = selectedTile.getPiece().getSide() == getPiece().getSide();
 
 			// If's a valid move, play it.
-			if (!isAlly && selectedTile.getPiece().isValidPlay(this)) {
+			if (!isAlly && selectedTile.getPiece().getPossibleMoves().contains(this)) {
+				selectedTile.getPiece().addTimeMoved();
 				setPiece(selectedTile.getPiece());
 				selectedTile.setPiece(null);
 
@@ -110,16 +114,16 @@ public class Tile extends JButton implements ActionListener {
 		return board;
 	}
 
-	public int getRowPos() {
-		return rowPos;
+	public int getRow() {
+		return row;
 	}
 
-	public char getColumnPos() {
-		return columnPos;
+	public char getColumn() {
+		return column;
 	}
 
 	@Override
 	public String toString() {
-		return "Position (" + rowPos + ", " + columnPos + ")";
+		return "Position (" + row + ", " + column + ")";
 	}
 }

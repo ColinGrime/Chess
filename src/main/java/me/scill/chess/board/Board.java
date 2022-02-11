@@ -61,7 +61,7 @@ public class Board {
 	 */
 	private Tile getTile(int row, char column) {
 		for (Tile pos : tiles) {
-			if (pos.getRowPos() == row && pos.getColumnPos() == column)
+			if (pos.getRow() == row && pos.getColumn() == column)
 				return pos;
 		}
 
