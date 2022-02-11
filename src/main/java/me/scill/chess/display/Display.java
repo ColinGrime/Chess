@@ -1,20 +1,20 @@
 package me.scill.chess.display;
 
+import me.scill.chess.board.Board;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public abstract class Display extends JFrame {
+public class Display extends JFrame {
+
+	private final MainMenu mainMenu = new MainMenu(this);
+	private final Chessboard chessboard = new Chessboard(new Board());
 
 	public Display(String title) {
 		this.setup(title);
-		this.display();
+		add(mainMenu);
 	}
-
-	/*
-	 * Runs before the menu gets displayed.
-	 */
-	protected abstract void init();
 
 	/*
 	 * Sets up the menu to be displayed.
@@ -23,16 +23,13 @@ public abstract class Display extends JFrame {
 		setTitle(title);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SwingUtilities.invokeLater(() -> setVisible(true));
 	}
 
-	/*
-	 * Displays the board after a slight delay.
-	 */
-	private void display() {
-		SwingUtilities.invokeLater(() -> {
-			init();
-			setVisible(true);
-		});
+	public void displayChessboard() {
+		remove(mainMenu);
+		add(chessboard);
+		revalidate();
 	}
 
 	public void setFullScreen() {
