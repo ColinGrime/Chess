@@ -1,7 +1,6 @@
 package me.scill.chess;
 
-import me.scill.chess.board.Board;
-import me.scill.chess.display.Chessboard;
+import me.scill.chess.display.Display;
 
 public class Chess {
 
@@ -10,7 +9,6 @@ public class Chess {
 	 * Player can click and move, and has option to see all possible moves.
 	 */
 	public static void main(String[] args) {
-//		MainMenu menu = new MainMenu("Chess");
-		new Chessboard(new Board());
+		new Display("Chess");
 	}
 }
