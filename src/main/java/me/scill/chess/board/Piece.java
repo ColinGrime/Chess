@@ -25,8 +25,12 @@ public abstract class Piece {
 		List<Tile> moves = getMoves();
 
 		for (Tile tile : moves) {
-			// If the move isn't blocked, it's valid.
-			if (!isBlocked(tile, moves))
+			// If the move is blocked, it's invalid
+			if (isBlocked(tile, moves))
+				continue;
+
+			// If the move has a Piece on it, make sure it's NOT an ally.
+			if (tile.getPiece() == null || tile.getPiece().getSide() != getSide())
 				possibleMoves.add(tile);
 		}
 
