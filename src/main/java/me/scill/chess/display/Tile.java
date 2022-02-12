@@ -13,15 +13,16 @@ import java.util.List;
 
 public class Tile extends JButton implements ActionListener {
 
-
 	private static Tile selectedTile = null;
 	private static Color selectedColor = null;
-	private static List<Tile> tilesInRange = new ArrayList<>();
+	private static final List<Tile> tilesInRange = new ArrayList<>();
 
 	private final Board board;
 	private final int row;
 	private final char column;
 	private Piece piece;
+
+	private boolean drawCircle = false;
 
 	public Tile(Board board, int row, char column) {
 		this(board, row, column, Color.WHITE);
@@ -33,8 +34,9 @@ public class Tile extends JButton implements ActionListener {
 		this.column = column;
 
 		setBackground(color);
-		setOpaque(true);
 		setBorderPainted(false);
+		setOpaque(true);
+
 		addActionListener(this);
 	}
 
@@ -63,6 +65,12 @@ public class Tile extends JButton implements ActionListener {
 			selectedTile.setBackground(selectedColor);
 			selectedTile = null;
 
+			tilesInRange.forEach(t -> {
+				t.setDrawCircle(false);
+				t.repaint();
+			});
+			tilesInRange.clear();
+
 			// Return if the clicked-on tile shouldn't be highlighted.
 			if (!shouldHighlight)
 				return;
@@ -71,8 +79,35 @@ public class Tile extends JButton implements ActionListener {
 		// If the clicked-on tile has a Piece that exists, select it.
 		if (getPiece() != null && getPiece().getSide() == board.getCurrentTurn()) {
 			selectedTile = this;
-			selectedColor = getBackground();
-			setBackground(Color.YELLOW);
+			highlight();
+		}
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+
+		if (!drawCircle)
+			return;
+
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(8));
+		g2.setColor(new Color(0, 0, 0, 30));
+
+		if (getPiece() == null)
+			g2.fillOval((getWidth() / 2) - 15, (getHeight() / 2) - 15, 30, 30);
+		else
+			g2.drawOval((getWidth() / 2) - 50, (getHeight() / 2) - 50, 100, 100);
+	}
+
+	private void highlight() {
+		selectedColor = getBackground();
+		setBackground(new Color(135, 211, 227));
+
+		for (Tile tile : selectedTile.getPiece().getPossibleMoves()) {
+			tile.setDrawCircle(true);
+			tile.repaint();
+			tilesInRange.add(tile);
 		}
 	}
 
@@ -120,6 +155,10 @@ public class Tile extends JButton implements ActionListener {
 
 	public char getColumn() {
 		return column;
+	}
+
+	public void setDrawCircle(boolean drawCircle) {
+		this.drawCircle = drawCircle;
 	}
 
 	@Override
