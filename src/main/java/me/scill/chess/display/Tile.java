@@ -2,6 +2,7 @@ package me.scill.chess.display;
 
 import me.scill.chess.board.Piece;
 import me.scill.chess.board.Board;
+import me.scill.chess.pieces.King;
 import me.scill.chess.utilities.SwingUtility;
 
 import javax.swing.*;
@@ -44,21 +45,28 @@ public class Tile extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// One of the tiles is selected.
 		if (selectedTile != null) {
-			boolean isAlly = false;
 			boolean shouldHighlight = selectedTile != this;
-
-			// If the clicked-on tile has a Piece that exists, check if it's an ally.
-			if (getPiece() != null)
-				isAlly = selectedTile.getPiece().getSide() == getPiece().getSide();
+			boolean illegalMove = Piece.isMoveIllegal(selectedTile.getPiece(), this);
 
 			// If's a valid move, play it.
-			if (!isAlly && selectedTile.getPiece().getPossibleMoves().contains(this)) {
-				selectedTile.getPiece().addTimeMoved();
+			if (!illegalMove && selectedTile.getPiece().getPossibleMoves().contains(this)) {
 				setPiece(selectedTile.getPiece());
+				getPiece().addTimeMoved();
 				selectedTile.setPiece(null);
 
-				board.nextTurn();
+				Piece.resetCheck();
+				List<Tile> possibleNextMoves = getPiece().getPossibleMoves();
+
+				// Check if the move resulted in a check.
+				for (Tile tile : possibleNextMoves) {
+					if (tile.getPiece() instanceof King) {
+						Piece.setCheck((King) tile.getPiece(), getPiece());
+						break;
+					}
+				}
+
 				shouldHighlight = false;
+				board.nextTurn();
 			}
 
 			// Removes the highlight and de-selects the selected tile.
@@ -105,6 +113,9 @@ public class Tile extends JButton implements ActionListener {
 		setBackground(new Color(135, 211, 227));
 
 		for (Tile tile : selectedTile.getPiece().getPossibleMoves()) {
+			if (King.isMoveIllegal(selectedTile.getPiece(), tile))
+				continue;
+
 			tile.setDrawCircle(true);
 			tile.repaint();
 			tilesInRange.add(tile);

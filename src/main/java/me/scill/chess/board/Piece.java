@@ -4,10 +4,14 @@ import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
 import me.scill.chess.pieces.King;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class Piece {
+
+	// The Piece currently checking a King.
+	private static Piece checkedKing = null;
+	private static Piece assassin = null;
+	private static final Map<Piece, List<Tile>> movesLeft = new HashMap<>();
 
 	private final Side side;
 	private Tile tile;
@@ -27,7 +31,7 @@ public abstract class Piece {
 
 		for (Tile tile : moves) {
 			// If the move is blocked, it's invalid
-			if (isBlocked(tile, moves))
+			if (isBlocked(tile, moves, false))
 				continue;
 
 			// If the move has a Piece on it, make sure it's NOT an ally (unless it's an attempted King move).
@@ -66,10 +70,10 @@ public abstract class Piece {
 	protected abstract boolean isValidMove(Tile tile, int rowDiff, int columnDiff);
 
 	public boolean isBlocked(Tile tile) {
-		return isBlocked(tile, getMoves());
+		return isBlocked(tile, getMoves(), false);
 	}
 
-	private boolean isBlocked(Tile tile, List<Tile> moves) {
+	private boolean isBlocked(Tile tile, List<Tile> moves, boolean canSpaceBlock) {
 		// Row and column differences.
 		int rowDiff = Math.abs(tile.getRow() - getTile().getRow());
 		int columnDiff = Math.abs(tile.getColumn() - getTile().getColumn());
@@ -86,7 +90,7 @@ public abstract class Piece {
 
 		for (Tile t : moves) {
 			// If there's no Piece, it can't be blocking.
-			if (t.getPiece() == null)
+			if (!canSpaceBlock && t.getPiece() == null)
 				continue;
 
 			// If it hasn't moved rows, don't check different rows.
@@ -129,6 +133,57 @@ public abstract class Piece {
 
 	public int getTimesMoved() {
 		return timesMoved;
+	}
+
+	public static void setCheck(King checkedKing, Piece assassin) {
+		Piece.checkedKing = checkedKing;
+		Piece.assassin = assassin;
+		movesLeft.clear();
+
+		for (Tile tile : assassin.getTile().getBoard().getTiles()) {
+			if (tile.getPiece() == null || tile.getPiece().getSide() == assassin.getSide())
+				continue;
+
+			for (Tile t : tile.getPiece().getPossibleMoves()) {
+				// Check possible escapes for the King.
+				if (tile.getPiece() == checkedKing) {
+					if (!assassin.isValidMove(t))
+						addMoveLeft(checkedKing, t);
+					continue;
+				}
+
+				// If the move is invalid for the assassin, move on...
+				if (!assassin.isValidMove(t))
+					continue;
+
+				// If the assassin gets blocked by this move, add it to the list of moves left.
+				if (assassin.isBlocked(checkedKing.getTile(), List.of(t), true))
+					addMoveLeft(tile.getPiece(), t);
+			}
+		}
+
+//		if (movesLeft.isEmpty())
+//			checkedKing.getTile().getBoard();
+	}
+
+	public static void resetCheck() {
+		Piece.checkedKing = null;
+		Piece.assassin = null;
+		movesLeft.clear();
+	}
+
+	public static List<Tile> getMovesLeft(Piece piece) {
+		return movesLeft.getOrDefault(piece, new ArrayList<>());
+	}
+
+	public static void addMoveLeft(Piece piece, Tile tile) {
+		List<Tile> moves = movesLeft.getOrDefault(piece, new ArrayList<>());
+		moves.add(tile);
+		movesLeft.put(piece, moves);
+	}
+
+	public static boolean isMoveIllegal(Piece piece, Tile tile) {
+		return !movesLeft.isEmpty() && !getMovesLeft(piece).contains(tile);
 	}
 
 	@Override
