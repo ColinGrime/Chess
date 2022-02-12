@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +107,21 @@ public class Tile extends JButton implements ActionListener {
 			g2.fillOval((getWidth() / 2) - 15, (getHeight() / 2) - 15, 30, 30);
 		else
 			g2.drawOval((getWidth() / 2) - 50, (getHeight() / 2) - 50, 100, 100);
+	}
+
+	@Override
+	protected void processMouseEvent(MouseEvent e) {
+		super.processMouseEvent(e);
+
+		// If there's no Piece, or it's not their turn, don't switch cursor.
+		if (getPiece() == null || getPiece().getSide() != board.getCurrentTurn())
+			return;
+
+		// Sets the cursor depending on mouse enter/leave.
+		if (e.getID() == MouseEvent.MOUSE_ENTERED)
+			setCursor(new Cursor(Cursor.HAND_CURSOR));
+		else if (e.getID() == MouseEvent.MOUSE_EXITED)
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	private void highlight() {
