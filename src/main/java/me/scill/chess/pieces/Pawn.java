@@ -16,19 +16,13 @@ public class Pawn extends Piece {
 		int toRow = tile.getRow();
 
 		// The move has a piece on it.
-		if (tile.getPiece() != null)
+		if (tile.getPiece() != null || tile == King.getAttemptedMove())
 			// Returns true if it moves to the side in the correct direction.
 			return columnDiff == 1 && isRightDirection(fromRow, toRow, true);
 
 		// Pawns can't move to the side!
 		if (columnDiff >= 1)
 			return false;
-
-		if (tile.getRow() == 5 && tile.getColumn() == 'c') {
-			System.out.println("FROM = " + fromRow);
-			System.out.println("TO = " + toRow);
-			System.out.println("THIS = " + isRightDirection(fromRow, toRow, false));
-		}
 
 		// The move is valid.
 		return isRightDirection(fromRow, toRow, false);

@@ -2,6 +2,7 @@ package me.scill.chess.board;
 
 import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
+import me.scill.chess.pieces.King;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public abstract class Piece {
 			if (isBlocked(tile, moves))
 				continue;
 
-			// If the move has a Piece on it, make sure it's NOT an ally.
-			if (tile.getPiece() == null || tile.getPiece().getSide() != getSide())
+			// If the move has a Piece on it, make sure it's NOT an ally (unless it's an attempted King move).
+			if (tile.getPiece() == null || tile.getPiece().getSide() != getSide() || tile == King.getAttemptedMove())
 				possibleMoves.add(tile);
 		}
 
