@@ -51,6 +51,9 @@ public class Tile extends JButton implements ActionListener {
 
 			// If's a valid move, play it.
 			if (!illegalMove && selectedTile.getPiece().getPossibleMoves().contains(this)) {
+				if (selectedTile.getPiece() instanceof King)
+					((King) selectedTile.getPiece()).checkForCastle(this);
+
 				setPiece(selectedTile.getPiece());
 				getPiece().addTimeMoved();
 				selectedTile.setPiece(null);
