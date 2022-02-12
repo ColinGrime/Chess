@@ -51,7 +51,6 @@ public abstract class Piece {
 				moves.add(tile);
 		}
 
-		System.out.println(moves);
 		return moves;
 	}
 
@@ -85,12 +84,23 @@ public abstract class Piece {
 		int maxColumn = Math.max(tile.getColumn(), getTile().getColumn());
 
 		for (Tile t : moves) {
+			// If there's no Piece, it can't be blocking.
 			if (t.getPiece() == null)
 				continue;
 
+			// If it hasn't moved rows, don't check different rows.
+			else if (!hasMovedRow && t.getRow() != tile.getRow())
+				continue;
+
+			// If it hasn't moved columns, don't check different columns.
+			else if (!hasMovedColumn && t.getColumn() != tile.getColumn())
+				continue;
+
+			// Checked for blocked rows/columns.
 			boolean isRowBlocked = t.getRow() > minRow && t.getRow() < maxRow;
 			boolean isColumnBlocked = t.getColumn() > minColumn && t.getColumn() < maxColumn;
 
+			// Check if the Piece is blocking the movement.
 			if (isBlocked(isRowBlocked, isColumnBlocked, hasMovedRow, hasMovedColumn))
 				return true;
 		}
