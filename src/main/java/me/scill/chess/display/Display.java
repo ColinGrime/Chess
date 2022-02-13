@@ -1,19 +1,19 @@
 package me.scill.chess.display;
 
-import me.scill.chess.board.Board;
 import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 
 public class Display extends JFrame {
 
 	private final MainMenu mainMenu = new MainMenu(this);
-	private final Chessboard chessboard = new Chessboard(new Board());
+	private final Board board = new Board();
 
 	public Display(String title) {
 		this.setup(title);
-		add(mainMenu);
+		this.add(mainMenu);
 	}
 
 	/*
@@ -23,6 +23,7 @@ public class Display extends JFrame {
 		setTitle(title);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
 
 		Image image = ResourceUtility.getImage("Logo.png", 100, 100);
 
@@ -44,7 +45,7 @@ public class Display extends JFrame {
 
 	public void displayChessboard() {
 		remove(mainMenu);
-		add(chessboard);
+		add(board.display(getContentPane().getSize()));
 		revalidate();
 	}
 }

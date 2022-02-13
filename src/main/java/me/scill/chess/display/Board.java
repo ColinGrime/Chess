@@ -1,17 +1,21 @@
-package me.scill.chess.board;
+package me.scill.chess.display;
 
 import me.scill.chess.Player;
-import me.scill.chess.display.UpgradePanel;
 import me.scill.chess.enums.Side;
-import me.scill.chess.display.Tile;
 import me.scill.chess.pieces.*;
 
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public class Board extends JPanel {
 
-	private final int SIZE = 8;
+	private final Color MAIN = Color.decode("#E4E9F7"),
+						SECONDARY = Color.decode("#77AADC");
+
+	private Dimension size;
 	private final List<Tile> tiles = new ArrayList<>();
 
 	private final Player player1 = new Player("White", Side.WHITE);
@@ -22,11 +26,59 @@ public class Board {
 
 	private Side currentTurn = Side.WHITE;
 
-	public Board() {}
+	//		try {
+//			// Open an audio input stream.
+//			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./music/KissTheSky.wav");
+//
+//			if (inputStream == null) {
+//				System.out.println("[Error] Music file location is invalid.");
+//				return;
+//			}
+//
+//			AudioInputStream audioIn = AudioSystem.getAudioInputStream(inputStream);
+//			// Get a sound clip resource.
+//			Clip clip = AudioSystem.getClip();
+//			// Open audio clip and load samples from the audio input stream.
+//			clip.open(audioIn);
+//			clip.start();
+//		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+//			e.printStackTrace();
+//		}
 
-	public void setupBoard() {
+	public Board display(Dimension size) {
+		this.size = new Dimension((int) size.getHeight() / 8, (int) size.getHeight() / 8);
+
+		setBackground(new Color(40, 44, 52));
+		setLayout(new GridBagLayout());
+
+		// Sets up the grid & puts the pieces on the board.
+		setupGrid();
 		createSide(Side.WHITE);
 		createSide(Side.BLACK);
+
+		return this;
+	}
+
+	private void setupGrid() {
+		GridBagConstraints gbc = new GridBagConstraints();
+		int index = 0;
+
+		for (int row=0; row<8; row++) {
+			for (char column='a'; column<'a'+8; column++) {
+				// Creates the Color for the Tile.
+				Color color = index++ % 2 == 0 ? MAIN : SECONDARY;
+				Tile position = new Tile(this, 8 - row, column, color);
+
+				// Sets the X and Y of the grid.
+				gbc.gridx = column;
+				gbc.gridy = row;
+
+				// Add the position to the board, and the panel to the display.
+				getTiles().add(position);
+				add(position, gbc);
+			}
+			index++;
+		}
 	}
 
 	/**
@@ -79,10 +131,6 @@ public class Board {
 		return new Tile(this, 1, 'a');
 	}
 
-	public int getSIZE() {
-		return SIZE;
-	}
-
 	public List<Tile> getTiles() {
 		return tiles;
 	}
@@ -100,5 +148,10 @@ public class Board {
 
 	public void nextTurn() {
 		currentTurn = currentTurn == Side.WHITE ? Side.BLACK : Side.WHITE;
+	}
+
+	@Override
+	public Dimension getSize() {
+		return size;
 	}
 }
