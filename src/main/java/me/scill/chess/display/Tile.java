@@ -3,6 +3,7 @@ package me.scill.chess.display;
 import me.scill.chess.board.Piece;
 import me.scill.chess.board.Board;
 import me.scill.chess.pieces.King;
+import me.scill.chess.pieces.Pawn;
 import me.scill.chess.utilities.SwingUtility;
 
 import javax.swing.*;
@@ -45,7 +46,7 @@ public class Tile extends JButton implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// One of the tiles is selected.
-		if (selectedTile != null) {
+		if (selectedTile != null && selectedTile.getPiece() != null) {
 			boolean shouldHighlight = selectedTile != this;
 			boolean illegalMove = Piece.isMoveIllegal(selectedTile.getPiece(), this);
 
@@ -60,6 +61,10 @@ public class Tile extends JButton implements ActionListener {
 
 				Piece.resetCheck();
 				List<Tile> possibleNextMoves = getPiece().getPossibleMoves();
+
+				// Check if Pawn can upgrade.
+				if (possibleNextMoves.size() == 0 && getPiece() instanceof Pawn)
+					((Pawn) getPiece()).checkForUpgrade();
 
 				// Check if the move resulted in a check.
 				for (Tile tile : possibleNextMoves) {

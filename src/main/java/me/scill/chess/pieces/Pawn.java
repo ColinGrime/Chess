@@ -1,12 +1,9 @@
 package me.scill.chess.pieces;
 
 import me.scill.chess.board.Piece;
-import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
-import me.scill.chess.utilities.SwingUtility;
-
-import javax.swing.*;
-import java.awt.*;
+import me.scill.chess.display.UpgradePanel;
+import me.scill.chess.enums.Side;
 
 public class Pawn extends Piece {
 
@@ -56,27 +53,13 @@ public class Pawn extends Piece {
 		return diff == 1;
 	}
 
-//	public void checkForUpgrade() {
-//		int row = getTile().getRow();
-//
-//		// If Pawn is not in the last row, return.
-//		if (row > 1 && row < 8)
-//			return;
-//
-//		JButton button = new JButton(null, new ImageIcon(SwingUtility.getImage("white/Queen.png", 100, 100)));
-//		button.addActionListener(e -> {
-//			JOptionPane.getRootFrame().dispose();
-//		});
-//
-//		JOptionPane.showOptionDialog(new JPanel(),
-//				"Pick an Upgrade",
-//				null,
-//				JOptionPane.DEFAULT_OPTION,
-//				JOptionPane.QUESTION_MESSAGE,
-//				null,
-//				new Component[] {
-//					button
-//				},
-//				new JButton("Pawn", new ImageIcon(SwingUtility.getImage("white/Queen.png", 100, 100))));
-//	}
+	public void checkForUpgrade() {
+		int row = getTile().getRow();
+
+		// If Pawn is not in the first or last row, return.
+		if (row > 1 && row < 8)
+			return;
+
+		new UpgradePanel(this);
+	}
 }
