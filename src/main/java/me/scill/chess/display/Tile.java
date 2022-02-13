@@ -1,7 +1,6 @@
 package me.scill.chess.display;
 
-import me.scill.chess.board.Board;
-import me.scill.chess.board.Piece;
+import me.scill.chess.Piece;
 import me.scill.chess.pieces.King;
 import me.scill.chess.pieces.Pawn;
 
@@ -111,9 +110,9 @@ public class Tile extends JButton implements ActionListener {
 		g2.setColor(new Color(0, 0, 0, 30));
 
 		if (getPiece() == null)
-			g2.fillOval((getWidth() / 2) - 15, (getHeight() / 2) - 15, 30, 30);
+			g2.fillOval((getWidth() / 2) - 12, (getHeight() / 2) - 12, 24, 24);
 		else
-			g2.drawOval((getWidth() / 2) - 50, (getHeight() / 2) - 50, 100, 100);
+			g2.drawOval((getWidth() / 2) - 45, (getHeight() / 2) - 45, 90, 90);
 	}
 
 	@Override
@@ -201,6 +200,11 @@ public class Tile extends JButton implements ActionListener {
 
 	public void setDrawCircle(boolean drawCircle) {
 		this.drawCircle = drawCircle;
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		return board.getSize();
 	}
 
 	@Override

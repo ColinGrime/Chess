@@ -1,4 +1,4 @@
-package me.scill.chess.board;
+package me.scill.chess;
 
 import me.scill.chess.display.Tile;
 import me.scill.chess.enums.Side;

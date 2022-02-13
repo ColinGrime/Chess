@@ -1,7 +1,7 @@
 package me.scill.chess.pieces;
 
-import me.scill.chess.board.Board;
-import me.scill.chess.board.Piece;
+import me.scill.chess.display.Board;
+import me.scill.chess.Piece;
 import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
 
