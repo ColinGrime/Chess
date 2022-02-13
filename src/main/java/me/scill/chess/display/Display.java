@@ -25,9 +25,12 @@ public class Display extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 
-		Image image = ResourceUtility.getImage("Logo.png", 100, 100);
+		// Default background.
+		UIManager.put("OptionPane.background", new Color(40, 44, 52));
+		UIManager.put("Panel.background", new Color(40, 44, 52));
 
 		// Sets up the icon for Windows.
+		Image image = ResourceUtility.getImage("Logo.png", 512, 512);
 		setIconImage(image);
 
 		// Attempts to set the icon for macOS.

@@ -12,8 +12,8 @@ import java.util.List;
 
 public class Board extends JPanel {
 
-	private final Color MAIN = Color.decode("#E4E9F7"),
-						SECONDARY = Color.decode("#77AADC");
+	private final Color MAIN = Color.decode("#cedef0"),
+						SECONDARY = Color.decode("#6b9bd1");
 
 	private Dimension size;
 	private final List<Tile> tiles = new ArrayList<>();

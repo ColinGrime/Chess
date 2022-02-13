@@ -142,7 +142,7 @@ public class Tile extends JButton implements ActionListener {
 
 	private void highlight() {
 		selectedColor = getBackground();
-		setBackground(new Color(135, 211, 227));
+		setBackground(Color.decode("#9d9ad9"));
 
 		for (Tile tile : selectedTile.getPiece().getPossibleMoves()) {
 			if (King.isMoveIllegal(selectedTile.getPiece(), tile))
