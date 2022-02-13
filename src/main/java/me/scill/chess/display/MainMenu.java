@@ -1,10 +1,12 @@
 package me.scill.chess.display;
 
 import me.scill.chess.enums.Fonts;
-import me.scill.chess.utilities.SwingUtility;
+import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class MainMenu extends JPanel {
 
@@ -50,7 +52,7 @@ public class MainMenu extends JPanel {
 	private JLabel createText(String text, Color color, Fonts fontType, float size) {
 		JLabel title = new JLabel(text);
 		title.setForeground(color);
-		title.setFont(SwingUtility.createFont(fontType, size));
+		title.setFont(ResourceUtility.createFont(fontType, size));
 		return title;
 	}
 
@@ -61,7 +63,28 @@ public class MainMenu extends JPanel {
 		button.setFocusPainted(false);
 		button.setOpaque(false);
 		button.setMargin(new Insets(10, 10, 10, 10));
-		button.setFont(SwingUtility.createFont(fontType, size));
+		button.setFont(ResourceUtility.createFont(fontType, size));
+		button.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {}
+
+			@Override
+			public void mousePressed(MouseEvent e) {}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		});
+
 		return button;
 	}
 }
