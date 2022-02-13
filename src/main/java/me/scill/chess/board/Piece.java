@@ -1,10 +1,15 @@
 package me.scill.chess.board;
 
-import me.scill.chess.enums.Side;
+import me.scill.chess.display.StretchIcon;
 import me.scill.chess.display.Tile;
+import me.scill.chess.enums.Side;
 import me.scill.chess.pieces.King;
+import me.scill.chess.utilities.ResourceUtility;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class Piece {
 
@@ -14,11 +19,16 @@ public abstract class Piece {
 	private static final Map<Piece, List<Tile>> movesLeft = new HashMap<>();
 
 	private final Side side;
+	private final StretchIcon icon;
+
 	private Tile tile;
 	private int timesMoved = 0;
 
 	public Piece(Side side) {
 		this.side = side;
+
+		String path = side.name() + "/" + getClass().getSimpleName() + ".png";
+		this.icon = new StretchIcon(ResourceUtility.getImage(path, 100, 100));
 	}
 
 	/**
@@ -127,6 +137,10 @@ public abstract class Piece {
 		return side;
 	}
 
+	public StretchIcon getIcon() {
+		return icon;
+	}
+
 	public void addTimeMoved() {
 		timesMoved++;
 	}
@@ -178,11 +192,19 @@ public abstract class Piece {
 		movesLeft.clear();
 	}
 
+	public static Piece getCheckedKing() {
+		return checkedKing;
+	}
+
+	public static Piece getAssassin() {
+		return assassin;
+	}
+
 	public static List<Tile> getMovesLeft(Piece piece) {
 		return movesLeft.getOrDefault(piece, new ArrayList<>());
 	}
 
-	public static void addMoveLeft(Piece piece, Tile tile) {
+	private static void addMoveLeft(Piece piece, Tile tile) {
 		List<Tile> moves = movesLeft.getOrDefault(piece, new ArrayList<>());
 		moves.add(tile);
 		movesLeft.put(piece, moves);
