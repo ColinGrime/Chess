@@ -73,7 +73,7 @@ public abstract class Piece {
 		return isBlocked(tile, getMoves(), false);
 	}
 
-	private boolean isBlocked(Tile tile, List<Tile> moves, boolean canSpaceBlock) {
+	protected boolean isBlocked(Tile tile, List<Tile> moves, boolean canSpaceBlock) {
 		// Row and column differences.
 		int rowDiff = Math.abs(tile.getRow() - getTile().getRow());
 		int columnDiff = Math.abs(tile.getColumn() - getTile().getColumn());
@@ -145,6 +145,12 @@ public abstract class Piece {
 				continue;
 
 			for (Tile t : tile.getPiece().getPossibleMoves()) {
+				// If the move kills the assassin, add it to list of moves left.
+				if (t == assassin.getTile()) {
+					addMoveLeft(tile.getPiece(), t);
+					continue;
+				}
+
 				// Check possible escapes for the King.
 				if (tile.getPiece() == checkedKing) {
 					if (!assassin.isValidMove(t))

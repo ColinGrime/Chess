@@ -38,7 +38,7 @@ public class King extends Piece {
 				continue;
 
 			// King would be in check if he moves.
-			if (t.getPiece().getPossibleMoves().contains(tile)) {
+			if (tile != t && t.getPiece().getPossibleMoves().contains(tile)) {
 				attemptedMove = null;
 				return false;
 			}
