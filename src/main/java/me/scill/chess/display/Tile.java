@@ -46,7 +46,7 @@ public class Tile extends JButton implements ActionListener {
 		// One of the tiles is selected.
 		if (selectedTile != null && selectedTile.getPiece() != null) {
 			boolean shouldHighlight = selectedTile != this;
-			boolean illegalMove = Piece.isMoveIllegal(selectedTile.getPiece(), this);
+			boolean illegalMove = board.isMoveIllegal(selectedTile.getPiece(), this);
 
 			// If's a valid move, play it.
 			if (!illegalMove && selectedTile.getPiece().getPossibleMoves().contains(this)) {
@@ -57,7 +57,7 @@ public class Tile extends JButton implements ActionListener {
 				getPiece().addTimeMoved();
 				selectedTile.setPiece(null);
 
-				Piece.resetCheck();
+				board.resetCheck();
 				List<Tile> possibleNextMoves = getPiece().getPossibleMoves();
 
 				// Check if Pawn can upgrade.
@@ -67,7 +67,7 @@ public class Tile extends JButton implements ActionListener {
 				// Check if the move resulted in a check.
 				for (Tile tile : possibleNextMoves) {
 					if (tile.getPiece() instanceof King) {
-						Piece.setCheck((King) tile.getPiece(), getPiece());
+						board.setCheck((King) tile.getPiece(), getPiece());
 						break;
 					}
 				}
@@ -129,7 +129,7 @@ public class Tile extends JButton implements ActionListener {
 		if (tilesInRange.contains(this));
 
 		// If the King is in checked, you can only select the pieces that can get it out of it.
-		else if (getPiece() != null && Piece.getCheckedKing() != null && Piece.getMovesLeft(getPiece()).size() == 0)
+		else if (getPiece() != null && board.getCheckedKing() != null && board.getMovesLeft(getPiece()).size() == 0)
 			return;
 
 		// If there's no Piece, or it's not their turn, don't switch cursor.
@@ -145,7 +145,7 @@ public class Tile extends JButton implements ActionListener {
 		setBackground(Color.decode("#9d9ad9"));
 
 		for (Tile tile : selectedTile.getPiece().getPossibleMoves()) {
-			if (King.isMoveIllegal(selectedTile.getPiece(), tile))
+			if (board.isMoveIllegal(selectedTile.getPiece(), tile))
 				continue;
 
 			tile.setDrawCircle(true);
