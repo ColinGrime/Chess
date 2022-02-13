@@ -29,7 +29,7 @@ public class UpgradePanel extends JOptionPane {
 	}
 
 	private JButton makeButton(Piece piece) {
-		JButton button = new JButton(piece.getIcon());
+		JButton button = new JButton(piece.getIcon(100));
 		button.addActionListener(e -> {
 			JOptionPane.getRootFrame().dispose();
 			this.piece = piece;
