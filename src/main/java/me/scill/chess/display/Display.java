@@ -3,17 +3,16 @@ package me.scill.chess.display;
 import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 
 public class Display extends JFrame {
 
 	private final MainMenu mainMenu = new MainMenu(this);
-	private final Board board = new Board();
 
 	public Display(String title) {
 		this.setup(title);
-		this.add(mainMenu);
+		add(mainMenu);
+		displayMainMenu();
 	}
 
 	/*
@@ -21,8 +20,9 @@ public class Display extends JFrame {
 	 */
 	private void setup(String title) {
 		setTitle(title);
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setResizable(false);
 		pack();
 
 		// Default background.
@@ -46,9 +46,14 @@ public class Display extends JFrame {
 		SwingUtilities.invokeLater(() -> setVisible(true));
 	}
 
+	public void displayMainMenu() {
+		mainMenu.setVisible(true);
+		revalidate();
+	}
+
 	public void displayChessboard() {
-		remove(mainMenu);
-		add(board.display(getContentPane().getSize()));
+		mainMenu.setVisible(false);
+		add(new Board(this, getContentPane().getSize()));
 		revalidate();
 	}
 }
