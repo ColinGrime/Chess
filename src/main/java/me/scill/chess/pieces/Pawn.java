@@ -1,5 +1,6 @@
 package me.scill.chess.pieces;
 
+import me.scill.chess.board.Board;
 import me.scill.chess.board.Piece;
 import me.scill.chess.display.Tile;
 import me.scill.chess.display.UpgradePanel;
@@ -60,6 +61,7 @@ public class Pawn extends Piece {
 		if (row > 1 && row < 8)
 			return;
 
-		new UpgradePanel(this);
+		UpgradePanel panel = getTile().getBoard().getUpgrades(getSide());
+		panel.displayUpgrades(this);
 	}
 }

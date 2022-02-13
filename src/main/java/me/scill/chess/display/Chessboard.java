@@ -42,9 +42,6 @@ public class Chessboard extends JPanel {
 		// Sets up the grid & puts the pieces on the board.
 		this.setupGrid();
 		board.setupBoard();
-
-		// Re-sizes the pieces to fit the board.
-//		pack();
 	}
 
 	private void setupGrid() {
@@ -61,10 +58,10 @@ public class Chessboard extends JPanel {
 				if (doSwitchColor)
 					panelColor = panelColor == WHITE ? BLUE : WHITE;
 
-				// Creates a position, and adds a click listener to it
+				// Creates a new Tile.
 				Tile position = new Tile(board, board.getSIZE() - row, column, panelColor);
 
-				// Add the position to the board, and the panel to the display
+				// Add the position to the board, and the panel to the display.
 				board.getTiles().add(position);
 				add(position);
 			}

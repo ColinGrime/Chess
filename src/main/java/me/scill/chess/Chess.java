@@ -5,8 +5,9 @@ import me.scill.chess.display.Display;
 public class Chess {
 
 	/*
-	 * Each turn, switch board around to let the other player go.
-	 * Player can click and move, and has option to see all possible moves.
+	 * setup intense music/sound effects
+	 * setup themes
+	 * account for check on pawn upgrade
 	 */
 	public static void main(String[] args) {
 		new Display("Chess");

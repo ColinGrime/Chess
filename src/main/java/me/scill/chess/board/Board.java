@@ -1,6 +1,7 @@
 package me.scill.chess.board;
 
 import me.scill.chess.Player;
+import me.scill.chess.display.UpgradePanel;
 import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
 import me.scill.chess.pieces.*;
@@ -16,6 +17,9 @@ public class Board {
 	private final Player player1 = new Player("White", Side.WHITE);
 	private final Player player2 = new Player("Black", Side.BLACK);
 
+	private final UpgradePanel whiteUpgrades = new UpgradePanel(Side.WHITE);
+	private final UpgradePanel blackUpgrades = new UpgradePanel(Side.BLACK);
+
 	private Side currentTurn = Side.WHITE;
 
 	public Board() {}
@@ -25,8 +29,9 @@ public class Board {
 		createSide(Side.BLACK);
 	}
 
-	/*
-	 * Constructs a side in chess.
+	/**
+	 * Creates one of the sides of the board.
+	 * @param side the white or black side
 	 */
 	private void createSide(Side side) {
 		// White starts at row 1
@@ -48,16 +53,21 @@ public class Board {
 		fillPawns(secondRow, side);
 	}
 
-	/*
+	/**
 	 * Fills pawns in the A-H columns of the selected row.
+	 * @param row 2 or 7
+	 * @param side the white or black side
 	 */
 	private void fillPawns(int row, Side side) {
 		for (char column='a'; column<='h'; column++)
 			getTile(row, column).setPiece(new Pawn(side));
 	}
 
-	/*
+	/**
 	 * Gets the position given the row and column.
+	 * @param row row of the board
+	 * @param column column of the board
+	 * @return the Tile object at the given row/column, or (1, A) if not found.
 	 */
 	public Tile getTile(int row, char column) {
 		for (Tile pos : tiles) {
@@ -75,6 +85,13 @@ public class Board {
 
 	public List<Tile> getTiles() {
 		return tiles;
+	}
+
+	public UpgradePanel getUpgrades(Side side) {
+		if (side == Side.WHITE)
+			return whiteUpgrades;
+
+		return blackUpgrades;
 	}
 
 	public Side getCurrentTurn() {

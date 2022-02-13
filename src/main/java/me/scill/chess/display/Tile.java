@@ -1,10 +1,9 @@
 package me.scill.chess.display;
 
-import me.scill.chess.board.Piece;
 import me.scill.chess.board.Board;
+import me.scill.chess.board.Piece;
 import me.scill.chess.pieces.King;
 import me.scill.chess.pieces.Pawn;
-import me.scill.chess.utilities.SwingUtility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -177,15 +176,13 @@ public class Tile extends JButton implements ActionListener {
 	 * Paints the chess icon onto the tile.
 	 * @param piece any chess piece
 	 */
-	private void paintPiece(Piece piece) {
+	public void paintPiece(Piece piece) {
 		if (piece == null) {
 			setIcon(null);
 			return;
 		}
 
-		String imagePath = piece.getSide().name().toLowerCase() + "/" + piece.getClass().getSimpleName() + ".png";
-		StretchIcon icon = new StretchIcon(SwingUtility.getImage(imagePath, 100, 100));
-
+		StretchIcon icon = new StretchIcon(piece.getIcon().getImage());
 		SwingUtilities.invokeLater(() -> setIcon(icon));
 		SwingUtilities.invokeLater(() -> setPressedIcon(icon));
 	}

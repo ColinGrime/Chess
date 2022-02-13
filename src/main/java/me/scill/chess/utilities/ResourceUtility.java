@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SwingUtility {
+public class ResourceUtility {
 
 	public static Image getImage(String path, int width, int height) {
 		BufferedImage bufferedImage = null;
@@ -16,11 +16,7 @@ public class SwingUtility {
 		try {
 			// Retrieves the path of the image, and its InputStream.
 			String imagePath = "/images/" + path;
-			InputStream inputStream = SwingUtility.class.getResourceAsStream(imagePath);
-
-			// Returns if the InputStream is invalid.
-			if (inputStream == null)
-				return null;
+			InputStream inputStream = getStream(imagePath);
 
 			// Reads in the InputStream and retrieves the BufferedImage.
 			bufferedImage = ImageIO.read(inputStream);
@@ -46,12 +42,21 @@ public class SwingUtility {
 		Font font = null;
 
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, FileUtility.getStream(fontType.path()));
+			font = Font.createFont(Font.TRUETYPE_FONT, getStream(fontType.path()));
 			font = font.deriveFont(size);
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
 
 		return font;
+	}
+
+	public static InputStream getStream(String path) {
+		InputStream inputStream = ResourceUtility.class.getResourceAsStream(path);
+
+		if (inputStream == null)
+			System.out.println("Error: Path \"" + path + "\" does not exist.");
+
+		return inputStream;
 	}
 }

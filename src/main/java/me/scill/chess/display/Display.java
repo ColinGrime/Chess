@@ -1,7 +1,7 @@
 package me.scill.chess.display;
 
 import me.scill.chess.board.Board;
-import me.scill.chess.utilities.SwingUtility;
+import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,7 @@ public class Display extends JFrame {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		Image image = SwingUtility.getImage("Logo.png", 100, 100);
+		Image image = ResourceUtility.getImage("Logo.png", 100, 100);
 
 		// Sets up the icon for Windows.
 		setIconImage(image);

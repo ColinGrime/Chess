@@ -6,6 +6,7 @@ import me.scill.chess.enums.Side;
 import me.scill.chess.pieces.King;
 import me.scill.chess.utilities.ResourceUtility;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ public abstract class Piece {
 	private static final Map<Piece, List<Tile>> movesLeft = new HashMap<>();
 
 	private final Side side;
-	private final StretchIcon icon;
+	private final ImageIcon icon;
 
 	private Tile tile;
 	private int timesMoved = 0;
@@ -28,7 +29,7 @@ public abstract class Piece {
 		this.side = side;
 
 		String path = side.name() + "/" + getClass().getSimpleName() + ".png";
-		this.icon = new StretchIcon(ResourceUtility.getImage(path, 100, 100));
+		this.icon = new ImageIcon(ResourceUtility.getImage(path, 100, 100));
 	}
 
 	/**
@@ -137,7 +138,7 @@ public abstract class Piece {
 		return side;
 	}
 
-	public StretchIcon getIcon() {
+	public ImageIcon getIcon() {
 		return icon;
 	}
 
