@@ -121,15 +121,25 @@ public class Tile extends JButton implements ActionListener {
 	protected void processMouseEvent(MouseEvent e) {
 		super.processMouseEvent(e);
 
-		// If there's no Piece, or it's not their turn, don't switch cursor.
-		if (getPiece() == null || getPiece().getSide() != board.getCurrentTurn())
+		// Sets the cursor to default on leave.
+		if (e.getID() == MouseEvent.MOUSE_EXITED)
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		else if (e.getID() != MouseEvent.MOUSE_ENTERED)
 			return;
 
-		// Sets the cursor depending on mouse enter/leave.
-		if (e.getID() == MouseEvent.MOUSE_ENTERED)
-			setCursor(new Cursor(Cursor.HAND_CURSOR));
-		else if (e.getID() == MouseEvent.MOUSE_EXITED)
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		// If you can move to this Tile, it changes into a hand cursor.
+		if (tilesInRange.contains(this));
+
+		// If the King is in checked, you can only select the pieces that can get it out of it.
+		else if (getPiece() != null && Piece.getCheckedKing() != null && Piece.getMovesLeft(getPiece()).size() == 0)
+			return;
+
+		// If there's no Piece, or it's not their turn, don't switch cursor.
+		else if (getPiece() == null || getPiece().getSide() != board.getCurrentTurn())
+			return;
+
+		// Sets the cursor to hand on enter.
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 
 	private void highlight() {
