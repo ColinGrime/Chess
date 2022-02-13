@@ -3,6 +3,10 @@ package me.scill.chess.pieces;
 import me.scill.chess.board.Piece;
 import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
+import me.scill.chess.utilities.SwingUtility;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Pawn extends Piece {
 
@@ -39,12 +43,40 @@ public class Pawn extends Piece {
 	 */
 	private boolean isRightDirection(int fromRow, int toRow, boolean isAttacking) {
 		// Gets how far the Pawn has moved depending on its side.
-		int diff = getSide() == Side.WHITE ? toRow - fromRow : fromRow - toRow;
+		boolean isWhite = getSide() == Side.WHITE;
+		int diff = isWhite ? toRow - fromRow : fromRow - toRow;
 
 		// Pawns can move 2 spaces on the first turn if it's normal.
-		if (!isAttacking && diff == 2 && getTimesMoved() == 0)
-			return true;
+		if (!isAttacking && diff == 2 && getTimesMoved() == 0) {
+			// Check if there is a Piece in the way of the Pawn.
+			Tile tileBetween = getTile().getBoard().getTile(isWhite ? 3 : 6, getTile().getColumn());
+			return tileBetween.getPiece() == null;
+		}
 
 		return diff == 1;
 	}
+
+//	public void checkForUpgrade() {
+//		int row = getTile().getRow();
+//
+//		// If Pawn is not in the last row, return.
+//		if (row > 1 && row < 8)
+//			return;
+//
+//		JButton button = new JButton(null, new ImageIcon(SwingUtility.getImage("white/Queen.png", 100, 100)));
+//		button.addActionListener(e -> {
+//			JOptionPane.getRootFrame().dispose();
+//		});
+//
+//		JOptionPane.showOptionDialog(new JPanel(),
+//				"Pick an Upgrade",
+//				null,
+//				JOptionPane.DEFAULT_OPTION,
+//				JOptionPane.QUESTION_MESSAGE,
+//				null,
+//				new Component[] {
+//					button
+//				},
+//				new JButton("Pawn", new ImageIcon(SwingUtility.getImage("white/Queen.png", 100, 100))));
+//	}
 }
