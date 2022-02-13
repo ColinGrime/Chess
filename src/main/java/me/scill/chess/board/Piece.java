@@ -1,6 +1,5 @@
 package me.scill.chess.board;
 
-import me.scill.chess.display.StretchIcon;
 import me.scill.chess.display.Tile;
 import me.scill.chess.enums.Side;
 import me.scill.chess.pieces.King;
@@ -29,7 +28,7 @@ public abstract class Piece {
 		this.side = side;
 
 		String path = side.name() + "/" + getClass().getSimpleName() + ".png";
-		this.icon = new ImageIcon(ResourceUtility.getImage(path, 100, 100));
+		this.icon = new ImageIcon(ResourceUtility.getImage(path, 512, 512));
 	}
 
 	/**
@@ -140,6 +139,11 @@ public abstract class Piece {
 
 	public ImageIcon getIcon() {
 		return icon;
+	}
+
+	public ImageIcon getIcon(int size) {
+		String path = side.name() + "/" + getClass().getSimpleName() + ".png";
+		return new ImageIcon(ResourceUtility.getImage(path, size, size));
 	}
 
 	public void addTimeMoved() {
