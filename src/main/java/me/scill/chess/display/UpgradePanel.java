@@ -1,31 +1,44 @@
 package me.scill.chess.display;
 
 import me.scill.chess.board.Piece;
+import me.scill.chess.enums.Side;
 import me.scill.chess.pieces.*;
-import me.scill.chess.utilities.SwingUtility;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.Random;
 
-public class UpgradePanel extends JPanel {
+public class UpgradePanel extends JOptionPane {
+
+	private final Piece[] pieces;
+	private final JButton[] options;
 
 	private Piece piece = null;
 
-	public UpgradePanel(Pawn pawn) {
+	public UpgradePanel(Side side) {
 		// Rook, Bishop, Knight, Queen
-		Piece[] pieces = new Piece[] {
-				new Rook(pawn.getSide()),
-				new Bishop(pawn.getSide()),
-				new Knight(pawn.getSide()),
-				new Queen(pawn.getSide())
+		this.pieces = new Piece[]{
+				new Rook(side),
+				new Bishop(side),
+				new Knight(side),
+				new Queen(side)
 		};
 
 		// Make the pieces above into buttons.
-		JButton[] options = new JButton[4];
-		for (int i=0; i<options.length; i++)
+		this.options = new JButton[4];
+		for (int i = 0; i < options.length; i++)
 			options[i] = makeButton(pieces[i]);
+	}
 
+	private JButton makeButton(Piece piece) {
+		JButton button = new JButton(piece.getIcon());
+		button.addActionListener(e -> {
+			JOptionPane.getRootFrame().dispose();
+			this.piece = piece;
+		});
+
+		return button;
+	}
+
+	public void displayUpgrades(Pawn pawn) {
 		// Prompt the user for which piece they want...
 		JOptionPane.showOptionDialog(this,
 				"",
@@ -45,18 +58,5 @@ public class UpgradePanel extends JPanel {
 		// If they force quit, randomly change the Pawn.
 		int randomIndex = (int) (Math.random() * pieces.length);
 		pawn.getTile().setPiece(pieces[randomIndex]);
-	}
-
-	private JButton makeButton(Piece piece) {
-		String path = piece.getSide() + "/" + piece.getClass().getSimpleName() + ".png";
-		ImageIcon icon = new ImageIcon(SwingUtility.getImage(path, 100, 100));
-
-		JButton button = new JButton(icon);
-		button.addActionListener(e -> {
-			JOptionPane.getRootFrame().dispose();
-			this.piece = piece;
-		});
-
-		return button;
 	}
 }
