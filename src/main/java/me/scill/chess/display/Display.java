@@ -1,5 +1,6 @@
 package me.scill.chess.display;
 
+import me.scill.chess.Music;
 import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
@@ -8,11 +9,13 @@ import java.awt.*;
 public class Display extends JFrame {
 
 	private final MainMenu mainMenu = new MainMenu(this);
+	private final Music music = new Music();
 
 	public Display(String title) {
 		this.setup(title);
 		add(mainMenu);
 		displayMainMenu();
+		music.start();
 	}
 
 	/*
@@ -49,11 +52,19 @@ public class Display extends JFrame {
 	public void displayMainMenu() {
 		mainMenu.setVisible(true);
 		revalidate();
+
+		music.setStatus(Music.Status.HOME);
 	}
 
 	public void displayChessboard() {
 		mainMenu.setVisible(false);
 		add(new Board(this, getContentPane().getSize()));
 		revalidate();
+
+		music.setStatus(Music.Status.NORMAL);
+	}
+
+	public Music getMusic() {
+		return music;
 	}
 }

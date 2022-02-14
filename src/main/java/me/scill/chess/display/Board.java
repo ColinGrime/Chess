@@ -1,5 +1,6 @@
 package me.scill.chess.display;
 
+import me.scill.chess.Music;
 import me.scill.chess.Piece;
 import me.scill.chess.enums.Side;
 import me.scill.chess.pieces.*;
@@ -42,25 +43,6 @@ public class Board extends JPanel {
 
 		setVisible(true);
 	}
-
-	//		try {
-//			// Open an audio input stream.
-//			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./music/KissTheSky.wav");
-//
-//			if (inputStream == null) {
-//				System.out.println("[Error] Music file location is invalid.");
-//				return;
-//			}
-//
-//			AudioInputStream audioIn = AudioSystem.getAudioInputStream(inputStream);
-//			// Get a sound clip resource.
-//			Clip clip = AudioSystem.getClip();
-//			// Open audio clip and load samples from the audio input stream.
-//			clip.open(audioIn);
-//			clip.start();
-//		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-//			e.printStackTrace();
-//		}
 
 	private void setupGrid() {
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -198,6 +180,8 @@ public class Board extends JPanel {
 			setVisible(false);
 			display.displayMainMenu();
 		}
+
+		display.getMusic().setStatus(Music.Status.CLIMAX);
 	}
 
 	public void resetCheck() {
