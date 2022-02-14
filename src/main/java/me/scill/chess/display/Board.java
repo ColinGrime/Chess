@@ -193,6 +193,10 @@ public class Board extends JPanel {
 			if (tile.getPiece() == null)
 				continue;
 
+			// This Piece wouldn't check your King since you are attempting to kill it.
+			if (move.getPiece() != null && move.getPiece() == tile.getPiece())
+				continue;
+
 			// Iterates over each possible move, only caring about those who effect a King.
 			for (Tile t : tile.getPiece().getMoves(piece.getTile())) {
 				if (t.getPiece() == null || !(t.getPiece() instanceof King))
@@ -200,7 +204,10 @@ public class Board extends JPanel {
 
 				// Check has to come from the other side.
 				// You CANNOT check your own King!
-				if (piece.getSide() == t.getPiece().getSide() && tile.getPiece().getSide() != t.getPiece().getSide())
+				if (piece.getSide() != t.getPiece().getSide() || tile.getPiece().getSide() == t.getPiece().getSide())
+					continue;
+
+				if (!tile.getPiece().isBlocked(t, List.of(move), true))
 					return false;
 			}
 		}
@@ -212,7 +219,7 @@ public class Board extends JPanel {
 		return isBlocked(piece, posToCheck, move, getAllMoves(piece, posToCheck), false);
 	}
 
-	public boolean isBlocked(Piece piece, Tile posToCheck, Tile move, List<Tile> moves, boolean canSpaceBlock, Tile...whitelist) {
+	public boolean isBlocked(Piece piece, Tile posToCheck, Tile move, List<Tile> moves, boolean isAttemptingMove, Tile...whitelist) {
 		// Row and column differences.
 		int rowDiff = Math.abs(move.getRow() - posToCheck.getRow());
 		int columnDiff = Math.abs(move.getColumn() - posToCheck.getColumn());
@@ -242,7 +249,7 @@ public class Board extends JPanel {
 				continue;
 
 			// If there's no Piece, it can't be blocking.
-			if (!canSpaceBlock && tile.getPiece() == null)
+			if (!isAttemptingMove && tile.getPiece() == null)
 				continue;
 
 			// If it hasn't moved rows, don't check different rows.
