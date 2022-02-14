@@ -11,13 +11,13 @@ public class Knight extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile move, int rowDiff, int columnDiff) {
 		// The move is a "L" shape.
 		return (rowDiff == 2 && columnDiff == 1) || (rowDiff == 1 && columnDiff == 2);
 	}
 
 	@Override
-	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
+	public boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
 		return false;
 	}
 }

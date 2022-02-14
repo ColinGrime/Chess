@@ -11,7 +11,7 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile move, int rowDiff, int columnDiff) {
 		// The move is diagonal.
 		return rowDiff == columnDiff;
 	}

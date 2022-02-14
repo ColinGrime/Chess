@@ -1,6 +1,6 @@
 package me.scill.chess.utilities;
 
-import me.scill.chess.enums.Fonts;
+import me.scill.chess.enums.Font;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -38,11 +38,11 @@ public class ResourceUtility {
 	 * @param size any size.
 	 * @return Font object if fontType is an existing font type.
 	 */
-	public static Font createFont(Fonts fontType, float size) {
-		Font font = null;
+	public static java.awt.Font createFont(Font fontType, float size) {
+		java.awt.Font font = null;
 
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, getStream(fontType.path()));
+			font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, getStream(fontType.path()));
 			font = font.deriveFont(size);
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();

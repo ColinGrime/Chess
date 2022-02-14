@@ -11,13 +11,13 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile move, int rowDiff, int columnDiff) {
 		// Rook either moves its row OR column, but not both.
 		return rowDiff >= 1 ^ columnDiff >= 1;
 	}
 
 	@Override
-	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
+	public boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
 		// Row movement.
 		if (hasMovedRow)
 			return isRowBlocked;

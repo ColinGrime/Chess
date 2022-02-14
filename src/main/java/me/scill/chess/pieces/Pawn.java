@@ -12,12 +12,12 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile move, int rowDiff, int columnDiff) {
 		int fromRow = getTile().getRow();
-		int toRow = tile.getRow();
+		int toRow = move.getRow();
 
 		// The move has a piece on it.
-		if (tile.getPiece() != null || tile == King.getAttemptedMove())
+		if (move.getPiece() != null || move == King.getAttemptedMove())
 			// Returns true if it moves to the side in the correct direction.
 			return columnDiff == 1 && isRightDirection(fromRow, toRow, true);
 
@@ -30,7 +30,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
+	public boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
 		return false;
 	}
 

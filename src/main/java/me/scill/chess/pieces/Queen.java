@@ -11,7 +11,7 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile move, int rowDiff, int columnDiff) {
 		// The move is diagonal.
 		if (rowDiff == columnDiff)
 			return true;
@@ -21,7 +21,7 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
+	public boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
 		// Diagonal movement.
 		if (hasMovedRow && hasMovedColumn)
 			return isRowBlocked && isColumnBlocked;

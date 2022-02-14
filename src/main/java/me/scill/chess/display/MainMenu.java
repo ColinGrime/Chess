@@ -1,6 +1,6 @@
 package me.scill.chess.display;
 
-import me.scill.chess.enums.Fonts;
+import me.scill.chess.enums.Font;
 import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
@@ -31,13 +31,13 @@ public class MainMenu extends JPanel {
 //			logo.setIcon(new ImageIcon(image));
 
 		// Adds JLabel text to the screen.
-		JLabel title = createText("Chess", Color.decode("#26495C"), Fonts.SourceSansPro, 200);
+		JLabel title = createText("Chess", Color.decode("#26495C"), Font.SourceSansPro, 200);
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		JButton singleplayer = createButton("Singleplayer", Color.decode("#C4A35A"), Fonts.Raleway, 75);
+		JButton singleplayer = createButton("Singleplayer", Color.decode("#C4A35A"), Font.Raleway, 75);
 		singleplayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		JButton multiplayer = createButton("Multiplayer", Color.decode("#C4A35A"), Fonts.Raleway, 75);
+		JButton multiplayer = createButton("Multiplayer", Color.decode("#C4A35A"), Font.Raleway, 75);
 		multiplayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		multiplayer.addActionListener(e -> display.displayChessboard());
 
@@ -49,14 +49,14 @@ public class MainMenu extends JPanel {
 		add(multiplayer);
 	}
 
-	private JLabel createText(String text, Color color, Fonts fontType, float size) {
+	private JLabel createText(String text, Color color, Font fontType, float size) {
 		JLabel title = new JLabel(text);
 		title.setForeground(color);
 		title.setFont(ResourceUtility.createFont(fontType, size));
 		return title;
 	}
 
-	private JButton createButton(String text, Color color, Fonts fontType, float size) {
+	private JButton createButton(String text, Color color, Font fontType, float size) {
 		JButton button = new JButton(text);
 		button.setForeground(color);
 		button.setContentAreaFilled(false);

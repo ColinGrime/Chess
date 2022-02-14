@@ -17,9 +17,9 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean isValidMove(Tile tile, int rowDiff, int columnDiff) {
+	public boolean isValidMove(Tile move, int rowDiff, int columnDiff) {
 		// Check if the King is attempting to castle.
-		boolean isCastling = isValidCastling(tile, rowDiff, columnDiff);
+		boolean isCastling = isValidCastling(move, rowDiff, columnDiff);
 
 		// King can move 1 space in any direction, even diagonal.
 		if ((rowDiff > 1 || columnDiff > 1) && !isCastling)
@@ -29,16 +29,16 @@ public class King extends Piece {
 		if (attemptedMove != null)
 			return true;
 
-		attemptedMove = tile;
+		attemptedMove = move;
 
 		// King cannot put himself in check
-		for (Tile t : tile.getBoard().getTiles()) {
+		for (Tile t : move.getBoard().getTiles()) {
 			// Ignore piece-less tiles and allies.
 			if (t.getPiece() == null || t.getPiece().getSide() == getSide())
 				continue;
 
 			// King would be in check if he moves.
-			if (tile != t && t.getPiece().getPossibleMoves().contains(tile)) {
+			if (move != t && t.getPiece().getMoves().contains(move)) {
 				attemptedMove = null;
 				return false;
 			}
@@ -49,7 +49,7 @@ public class King extends Piece {
 	}
 
 	@Override
-	protected boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
+	public boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn) {
 		if (hasMovedColumn)
 			return isColumnBlocked;
 		return false;
