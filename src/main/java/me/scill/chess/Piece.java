@@ -2,14 +2,10 @@ package me.scill.chess;
 
 import me.scill.chess.display.Tile;
 import me.scill.chess.enums.Side;
-import me.scill.chess.pieces.King;
 import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class Piece {
 
@@ -27,98 +23,47 @@ public abstract class Piece {
 	}
 
 	/**
-	 * Gets a list of possible, valid moves.
-	 * @return list of possible moves.
+	 * @return moves the Piece can take.
 	 */
-	public List<Tile> getPossibleMoves() {
-		List<Tile> possibleMoves = new ArrayList<>();
-		List<Tile> moves = getMoves();
+	public List<Tile> getMoves() {
+		return getTile().getBoard().getMoves(this, getTile());
+	}
 
-		for (Tile tile : moves) {
-			// If the move is blocked, it's invalid
-			if (isBlocked(tile, moves, false))
-				continue;
-
-			// If the move has a Piece on it, make sure it's NOT an ally (unless it's an attempted King move).
-			if (tile.getPiece() == null || tile.getPiece().getSide() != getSide() || tile == King.getAttemptedMove())
-				possibleMoves.add(tile);
-		}
-
-		return possibleMoves;
+	public List<Tile> getMoves(Tile...whitelist) {
+		return getTile().getBoard().getMoves(this, getTile(), whitelist);
 	}
 
 	/**
-	 * Gets a list of moves a Piece can make
-	 *   without accounting for it being blocked.
-	 * @return list of moves.
+	 * @return all moves, including blocked moves, the Piece can take.
 	 */
-	private List<Tile> getMoves() {
-		List<Tile> moves = new ArrayList<>();
-
-		for (Tile tile : getTile().getBoard().getTiles()) {
-			// If the move is valid, you can move there.
-			if (isValidMove(tile))
-				moves.add(tile);
-		}
-
-		return moves;
+	private List<Tile> getAllMoves() {
+		return getTile().getBoard().getAllMoves(this, getTile());
 	}
 
-	public boolean isValidMove(Tile tile) {
-		// Row and column differences
-		int rowDiff = Math.abs(tile.getRow() - getTile().getRow());
-		int columnDiff = Math.abs(tile.getColumn() - getTile().getColumn());
-
-		return isValidMove(tile, rowDiff, columnDiff);
+	/**
+	 * Checks if the move is valid for the Piece.
+	 * @param move any move
+	 * @return true if the move is valid
+	 */
+	public boolean isValidMove(Tile move) {
+		return getTile().getBoard().isValidMove(this, getTile(), move);
 	}
 
-	protected abstract boolean isValidMove(Tile tile, int rowDiff, int columnDiff);
-
-	public boolean isBlocked(Tile tile) {
-		return isBlocked(tile, getMoves(), false);
+	/**
+	 * Checks if the move is blocked.
+	 * @param move any move
+	 * @return true if the path to the move is blocked
+	 */
+	public boolean isBlocked(Tile move) {
+		return getTile().getBoard().isBlocked(this, getTile(), move);
 	}
 
-	public boolean isBlocked(Tile tile, List<Tile> moves, boolean canSpaceBlock) {
-		// Row and column differences.
-		int rowDiff = Math.abs(tile.getRow() - getTile().getRow());
-		int columnDiff = Math.abs(tile.getColumn() - getTile().getColumn());
-
-		// If the Piece moved their row/column.
-		boolean hasMovedRow = rowDiff > 0;
-		boolean hasMovedColumn = columnDiff > 0;
-
-		// Min/max rows and columns.
-		int minRow = Math.min(tile.getRow(), getTile().getRow());
-		int maxRow = Math.max(tile.getRow(), getTile().getRow());
-		int minColumn = Math.min(tile.getColumn(), getTile().getColumn());
-		int maxColumn = Math.max(tile.getColumn(), getTile().getColumn());
-
-		for (Tile t : moves) {
-			// If there's no Piece, it can't be blocking.
-			if (!canSpaceBlock && t.getPiece() == null)
-				continue;
-
-			// If it hasn't moved rows, don't check different rows.
-			else if (!hasMovedRow && t.getRow() != tile.getRow())
-				continue;
-
-			// If it hasn't moved columns, don't check different columns.
-			else if (!hasMovedColumn && t.getColumn() != tile.getColumn())
-				continue;
-
-			// Checked for blocked rows/columns.
-			boolean isRowBlocked = t.getRow() > minRow && t.getRow() < maxRow;
-			boolean isColumnBlocked = t.getColumn() > minColumn && t.getColumn() < maxColumn;
-
-			// Check if the Piece is blocking the movement.
-			if (isBlocked(isRowBlocked, isColumnBlocked, hasMovedRow, hasMovedColumn))
-				return true;
-		}
-
-		return false;
+	public boolean isBlocked(Tile move, List<Tile> moves, boolean canSpaceBlock) {
+		return getTile().getBoard().isBlocked(this, getTile(), move, moves, canSpaceBlock);
 	}
 
-	protected abstract boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn);
+	public abstract boolean isValidMove(Tile move, int rowDiff, int columnDiff);
+	public abstract boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn);
 
 	public Tile getTile() {
 		return tile;
@@ -141,12 +86,12 @@ public abstract class Piece {
 		return new ImageIcon(ResourceUtility.getImage(path, size, size));
 	}
 
-	public void addTimeMoved() {
-		timesMoved++;
-	}
-
 	public int getTimesMoved() {
 		return timesMoved;
+	}
+
+	public void moved() {
+		timesMoved++;
 	}
 
 	@Override

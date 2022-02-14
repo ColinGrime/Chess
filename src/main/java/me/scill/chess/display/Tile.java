@@ -21,8 +21,8 @@ public class Tile extends JButton implements ActionListener {
 	private final Board board;
 	private final int row;
 	private final char column;
-	private Piece piece;
 
+	private Piece piece;
 	private boolean drawCircle = false;
 
 	public Tile(Board board, int row, char column) {
@@ -45,32 +45,24 @@ public class Tile extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// One of the tiles is selected.
 		if (selectedTile != null && selectedTile.getPiece() != null) {
+			Piece piece = selectedTile.getPiece();
 			boolean shouldHighlight = selectedTile != this;
-			boolean illegalMove = board.isMoveIllegal(selectedTile.getPiece(), this);
 
 			// If's a valid move, play it.
-			if (!illegalMove && selectedTile.getPiece().getPossibleMoves().contains(this)) {
+			if (piece.getMoves().contains(this) && board.isLegalMove(piece, this)) {
 				if (selectedTile.getPiece() instanceof King)
-					((King) selectedTile.getPiece()).checkForCastle(this);
+					((King) piece).checkForCastle(this);
 
-				setPiece(selectedTile.getPiece());
-				getPiece().addTimeMoved();
+				setPiece(piece);
+				getPiece().moved();
 				selectedTile.setPiece(null);
 
 				board.resetCheck();
-				List<Tile> possibleNextMoves = getPiece().getPossibleMoves();
+				board.checkForCheck(piece);
 
 				// Check if Pawn can upgrade.
-				if (possibleNextMoves.size() == 0 && getPiece() instanceof Pawn)
+				if (getPiece() instanceof Pawn)
 					((Pawn) getPiece()).checkForUpgrade();
-
-				// Check if the move resulted in a check.
-				for (Tile tile : possibleNextMoves) {
-					if (tile.getPiece() instanceof King) {
-						board.setCheck((King) tile.getPiece(), getPiece());
-						break;
-					}
-				}
 
 				shouldHighlight = false;
 				board.nextTurn();
@@ -144,8 +136,8 @@ public class Tile extends JButton implements ActionListener {
 		selectedColor = getBackground();
 		setBackground(Color.decode("#9d9ad9"));
 
-		for (Tile tile : selectedTile.getPiece().getPossibleMoves()) {
-			if (board.isMoveIllegal(selectedTile.getPiece(), tile))
+		for (Tile tile : selectedTile.getPiece().getMoves()) {
+			if (!board.isLegalMove(selectedTile.getPiece(), tile))
 				continue;
 
 			tile.setDrawCircle(true);
@@ -175,7 +167,7 @@ public class Tile extends JButton implements ActionListener {
 	 * Paints the chess icon onto the tile.
 	 * @param piece any chess piece
 	 */
-	public void paintPiece(Piece piece) {
+	private void paintPiece(Piece piece) {
 		if (piece == null) {
 			setIcon(null);
 			return;
@@ -209,6 +201,6 @@ public class Tile extends JButton implements ActionListener {
 
 	@Override
 	public String toString() {
-		return "Position (" + row + ", " + column + ")";
+		return piece + " @ pos(" + row + ", " + column + ")";
 	}
 }

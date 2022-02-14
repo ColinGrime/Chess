@@ -44,6 +44,9 @@ public class Board extends JPanel {
 		setVisible(true);
 	}
 
+	/**
+	 * Sets up the 8x8 chessboard.
+	 */
 	private void setupGrid() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		int index = 0;
@@ -135,16 +138,157 @@ public class Board extends JPanel {
 		currentTurn = currentTurn == Side.WHITE ? Side.BLACK : Side.WHITE;
 	}
 
+	/**
+	 * Gets a list of possible, valid moves.
+	 * @return list of possible moves.
+	 */
+	public List<Tile> getMoves(Piece piece, Tile posToCheck, Tile...whitelist) {
+		List<Tile> possibleMoves = new ArrayList<>();
+		List<Tile> moves = getAllMoves(piece, posToCheck);
+
+		for (Tile move : moves) {
+			// If the move is blocked, it's invalid
+			if (isBlocked(piece, posToCheck, move, moves, false, whitelist))
+				continue;
+
+			// If the move has a Piece on it, make sure it's NOT an ally (unless it's an attempted King move).
+			if (move.getPiece() == null || move.getPiece().getSide() != piece.getSide() || move == King.getAttemptedMove())
+				possibleMoves.add(move);
+		}
+
+		return possibleMoves;
+	}
+
+	/**
+	 * Gets a list of moves a Piece can make
+	 *   without accounting for it being blocked.
+	 * @return list of moves.
+	 */
+	public List<Tile> getAllMoves(Piece piece, Tile posToCheck) {
+		List<Tile> validMoves = new ArrayList<>();
+
+		for (Tile move : getTiles()) {
+			// If the move is valid, you can move there.
+			if (isValidMove(piece, posToCheck, move))
+				validMoves.add(move);
+		}
+
+		return validMoves;
+	}
+
+	public boolean isValidMove(Piece piece, Tile posToCheck, Tile move) {
+		// Row and column differences
+		int rowDiff = Math.abs(move.getRow() - posToCheck.getRow());
+		int columnDiff = Math.abs(move.getColumn() - posToCheck.getColumn());
+
+		return piece.isValidMove(move, rowDiff, columnDiff);
+	}
+
+	public boolean isLegalMove(Piece piece, Tile move) {
+		if (!movesLeft.isEmpty())
+			return getMovesLeft(piece).contains(move);
+
+		// Iterates over each tile, only caring about those with pieces.
+		for (Tile tile : tiles) {
+			if (tile.getPiece() == null)
+				continue;
+
+			// Iterates over each possible move, only caring about those who effect a King.
+			for (Tile t : tile.getPiece().getMoves(piece.getTile())) {
+				if (t.getPiece() == null || !(t.getPiece() instanceof King))
+					continue;
+
+				// Check has to come from the other side.
+				// You CANNOT check your own King!
+				if (piece.getSide() == t.getPiece().getSide() && tile.getPiece().getSide() != t.getPiece().getSide())
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	public boolean isBlocked(Piece piece, Tile posToCheck, Tile move) {
+		return isBlocked(piece, posToCheck, move, getAllMoves(piece, posToCheck), false);
+	}
+
+	public boolean isBlocked(Piece piece, Tile posToCheck, Tile move, List<Tile> moves, boolean canSpaceBlock, Tile...whitelist) {
+		// Row and column differences.
+		int rowDiff = Math.abs(move.getRow() - posToCheck.getRow());
+		int columnDiff = Math.abs(move.getColumn() - posToCheck.getColumn());
+
+		// If the Piece moved their row/column.
+		boolean hasMovedRow = rowDiff > 0;
+		boolean hasMovedColumn = columnDiff > 0;
+
+		// Min/max rows and columns.
+		int minRow = Math.min(move.getRow(), posToCheck.getRow());
+		int maxRow = Math.max(move.getRow(), posToCheck.getRow());
+		int minColumn = Math.min(move.getColumn(), posToCheck.getColumn());
+		int maxColumn = Math.max(move.getColumn(), posToCheck.getColumn());
+
+		for (Tile tile : moves) {
+			// Don't check whitelisted pieces.
+			boolean isWhitelisted = false;
+			for (Tile t : whitelist) {
+				if (tile == t) {
+					isWhitelisted = true;
+					break;
+				}
+			}
+
+			// If whitelisted, move on.
+			if (isWhitelisted)
+				continue;
+
+			// If there's no Piece, it can't be blocking.
+			if (!canSpaceBlock && tile.getPiece() == null)
+				continue;
+
+			// If it hasn't moved rows, don't check different rows.
+			else if (!hasMovedRow && tile.getRow() != move.getRow())
+				continue;
+
+			// If it hasn't moved columns, don't check different columns.
+			else if (!hasMovedColumn && tile.getColumn() != move.getColumn())
+				continue;
+
+			// Checked for blocked rows/columns.
+			boolean isRowBlocked = tile.getRow() > minRow && tile.getRow() < maxRow;
+			boolean isColumnBlocked = tile.getColumn() > minColumn && tile.getColumn() < maxColumn;
+
+			// Check if the Piece is blocking the movement.
+			if (piece.isBlocked(isRowBlocked, isColumnBlocked, hasMovedRow, hasMovedColumn))
+				return true;
+		}
+
+		return false;
+	}
+
+	public void checkForCheck(Piece piece) {
+		// Iterates over each possible move, only caring about those who effect a King.
+		for (Tile tile : piece.getMoves()) {
+			if (tile.getPiece() == null || !(tile.getPiece() instanceof King))
+				continue;
+
+			// If move results in check, set the check.
+			if (piece.getSide() != tile.getPiece().getSide()) {
+				setCheck((King) tile.getPiece(), piece);
+				return;
+			}
+		}
+	}
+
 	public void setCheck(King checkedKing, Piece assassin) {
 		this.checkedKing = checkedKing;
 		this.assassin = assassin;
 		movesLeft.clear();
 
-		for (Tile tile : assassin.getTile().getBoard().getTiles()) {
+		for (Tile tile : getTiles()) {
 			if (tile.getPiece() == null || tile.getPiece().getSide() == assassin.getSide())
 				continue;
 
-			for (Tile t : tile.getPiece().getPossibleMoves()) {
+			for (Tile t : tile.getPiece().getMoves()) {
 				// If the move kills the assassin, add it to list of moves left.
 				if (t == assassin.getTile()) {
 					addMoveLeft(tile.getPiece(), t);
@@ -206,10 +350,6 @@ public class Board extends JPanel {
 		List<Tile> moves = movesLeft.getOrDefault(piece, new ArrayList<>());
 		moves.add(tile);
 		movesLeft.put(piece, moves);
-	}
-
-	public boolean isMoveIllegal(Piece piece, Tile tile) {
-		return !movesLeft.isEmpty() && !getMovesLeft(piece).contains(tile);
 	}
 
 	@Override
