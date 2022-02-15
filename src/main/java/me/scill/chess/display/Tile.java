@@ -57,6 +57,7 @@ public class Tile extends JButton implements ActionListener {
 				getPiece().moved();
 				selectedTile.setPiece(null);
 
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				board.resetCheck();
 				board.checkForCheck(piece);
 
@@ -112,8 +113,11 @@ public class Tile extends JButton implements ActionListener {
 		super.processMouseEvent(e);
 
 		// Sets the cursor to default on leave.
-		if (e.getID() == MouseEvent.MOUSE_EXITED)
+		if (e.getID() == MouseEvent.MOUSE_EXITED) {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			return;
+		}
+
 		else if (e.getID() != MouseEvent.MOUSE_ENTERED)
 			return;
 
