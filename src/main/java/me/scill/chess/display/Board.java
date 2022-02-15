@@ -40,11 +40,8 @@ public class Board extends JPanel {
 
 		createSide(Side.WHITE);
 		createSide(Side.BLACK);
-
-		long time = System.currentTimeMillis();
 		whiteUpgrades = new UpgradePanel(this, Side.WHITE);
 		blackUpgrades = new UpgradePanel(this, Side.BLACK);
-		System.out.println("Upgrades done. Time elapsed: " + (System.currentTimeMillis() - time) + "ms");
 
 		setVisible(true);
 	}
@@ -212,7 +209,8 @@ public class Board extends JPanel {
 				if (piece.getSide() != t.getPiece().getSide() || tile.getPiece().getSide() == t.getPiece().getSide())
 					continue;
 
-				if (!tile.getPiece().isBlocked(t, List.of(move), true))
+				// Attacker can't be blocked by a Tile it can't even move to...
+				if (!tile.getPiece().isValidMove(move) || !tile.getPiece().isBlocked(t, List.of(move), true))
 					return false;
 			}
 		}
