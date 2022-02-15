@@ -1,5 +1,7 @@
 package me.scill.chess;
 
+import me.scill.chess.display.Board;
+import me.scill.chess.display.StretchIcon;
 import me.scill.chess.display.Tile;
 import me.scill.chess.enums.Side;
 import me.scill.chess.utilities.ResourceUtility;
@@ -9,24 +11,20 @@ import java.util.List;
 
 public abstract class Piece {
 
+	private final Board board;
 	private final Side side;
-	private final ImageIcon icon;
+	private final StretchIcon icon;
 
 	private Tile tile;
 	private int timesMoved = 0;
 
-	public Piece(Side side) {
+	public Piece(Board board, Side side) {
+		this.board = board;
 		this.side = side;
 
-		String path = side.name() + "/" + getClass().getSimpleName() + ".png";
-		this.icon = new ImageIcon(ResourceUtility.getImage(path, 512, 512));
-	}
-
-	/**
-	 * @return moves the Piece can take.
-	 */
-	public List<Tile> getMoves() {
-		return getTile().getBoard().getMoves(this, getTile());
+		String path = side.name().toLowerCase() + "/" + getClass().getSimpleName() + ".png";
+		StretchIcon icon = board.getImage(path);
+		this.icon = icon != null ? icon : new StretchIcon(ResourceUtility.getImage(path, 512, 512));
 	}
 
 	public List<Tile> getMoves(Tile...whitelist) {
@@ -58,12 +56,16 @@ public abstract class Piece {
 		return getTile().getBoard().isBlocked(this, getTile(), move);
 	}
 
-	public boolean isBlocked(Tile move, List<Tile> moves, boolean canSpaceBlock) {
-		return getTile().getBoard().isBlocked(this, getTile(), move, moves, canSpaceBlock);
+	public boolean isBlocked(Tile move, List<Tile> moves, boolean isAttemptingMove) {
+		return getTile().getBoard().isBlocked(this, getTile(), move, moves, isAttemptingMove);
 	}
 
 	public abstract boolean isValidMove(Tile move, int rowDiff, int columnDiff);
 	public abstract boolean isBlocked(boolean isRowBlocked, boolean isColumnBlocked, boolean hasMovedRow, boolean hasMovedColumn);
+
+	public Board getBoard() {
+		return board;
+	}
 
 	public Tile getTile() {
 		return tile;

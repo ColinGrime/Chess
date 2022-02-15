@@ -1,5 +1,6 @@
 package me.scill.chess.display;
 
+import me.scill.chess.ImageLoader;
 import me.scill.chess.Music;
 import me.scill.chess.utilities.ResourceUtility;
 
@@ -9,12 +10,20 @@ import java.awt.*;
 public class Display extends JFrame {
 
 	private final MainMenu mainMenu = new MainMenu(this);
-	private final Music music = new Music();
+	private final ImageLoader imageLoader;
+	private final Music music;
 
-	public Display(String title) {
-		this.setup(title);
+	public Display(String title, ImageLoader imageLoader, Music music) {
+		this.imageLoader = imageLoader;
+		this.music = music;
+
+		long time = System.currentTimeMillis();
+		setup(title);
 		add(mainMenu);
 		displayMainMenu();
+		System.out.println("Display shown. Time elapsed: " + (System.currentTimeMillis() - time) + "ms");
+
+		imageLoader.start();
 		music.start();
 	}
 
@@ -57,11 +66,18 @@ public class Display extends JFrame {
 	}
 
 	public void displayChessboard() {
+		long time = System.currentTimeMillis();
+
 		mainMenu.setVisible(false);
 		add(new Board(this, getContentPane().getSize()));
 		revalidate();
 
 		music.setStatus(Music.Status.NORMAL);
+		System.out.println("Chessboard shown. Time elapsed: " + (System.currentTimeMillis() - time) + "ms");
+	}
+
+	public ImageLoader getImageLoader() {
+		return imageLoader;
 	}
 
 	public Music getMusic() {

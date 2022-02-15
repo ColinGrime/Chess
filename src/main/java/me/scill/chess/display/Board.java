@@ -22,8 +22,7 @@ public class Board extends JPanel {
 	private final Dimension size;
 	private final List<Tile> tiles = new ArrayList<>();
 
-	private final UpgradePanel whiteUpgrades = new UpgradePanel(Side.WHITE);
-	private final UpgradePanel blackUpgrades = new UpgradePanel(Side.BLACK);
+	private final UpgradePanel whiteUpgrades, blackUpgrades;
 
 	private Side currentTurn = Side.WHITE;
 	private Piece checkedKing = null, assassin = null;
@@ -38,8 +37,14 @@ public class Board extends JPanel {
 
 		// Sets up the grid & puts the pieces on the board.
 		setupGrid();
+
 		createSide(Side.WHITE);
 		createSide(Side.BLACK);
+
+		long time = System.currentTimeMillis();
+		whiteUpgrades = new UpgradePanel(this, Side.WHITE);
+		blackUpgrades = new UpgradePanel(this, Side.BLACK);
+		System.out.println("Upgrades done. Time elapsed: " + (System.currentTimeMillis() - time) + "ms");
 
 		setVisible(true);
 	}
@@ -80,14 +85,14 @@ public class Board extends JPanel {
 		int secondRow = side == Side.WHITE ? 2 : 7;
 
 		// Sets all the chest pieces to its tiles.
-		getTile(firstRow, 'a').setPiece(new Rook(side));
-		getTile(firstRow, 'b').setPiece(new Knight(side));
-		getTile(firstRow, 'c').setPiece(new Bishop(side));
-		getTile(firstRow, 'd').setPiece(new Queen(side));
-		getTile(firstRow, 'e').setPiece(new King(side));
-		getTile(firstRow, 'f').setPiece(new Bishop(side));
-		getTile(firstRow, 'g').setPiece(new Knight(side));
-		getTile(firstRow, 'h').setPiece(new Rook(side));
+		getTile(firstRow, 'a').setPiece(new Rook(this, side));
+		getTile(firstRow, 'b').setPiece(new Knight(this, side));
+		getTile(firstRow, 'c').setPiece(new Bishop(this, side));
+		getTile(firstRow, 'd').setPiece(new Queen(this, side));
+		getTile(firstRow, 'e').setPiece(new King(this, side));
+		getTile(firstRow, 'f').setPiece(new Bishop(this, side));
+		getTile(firstRow, 'g').setPiece(new Knight(this, side));
+		getTile(firstRow, 'h').setPiece(new Rook(this, side));
 
 		// Sets all the pawns to its positions.
 		fillPawns(secondRow, side);
@@ -100,7 +105,7 @@ public class Board extends JPanel {
 	 */
 	private void fillPawns(int row, Side side) {
 		for (char column='a'; column<='h'; column++)
-			getTile(row, column).setPiece(new Pawn(side));
+			getTile(row, column).setPiece(new Pawn(this, side));
 	}
 
 	/**
@@ -362,5 +367,9 @@ public class Board extends JPanel {
 	@Override
 	public Dimension getSize() {
 		return size;
+	}
+
+	public StretchIcon getImage(String image) {
+		return display.getImageLoader().getImages().get(image);
 	}
 }

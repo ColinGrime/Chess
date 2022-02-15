@@ -13,13 +13,13 @@ public class UpgradePanel extends JOptionPane {
 
 	private Piece piece = null;
 
-	public UpgradePanel(Side side) {
+	public UpgradePanel(Board board, Side side) {
 		// Rook, Bishop, Knight, Queen
 		this.pieces = new Piece[]{
-				new Rook(side),
-				new Bishop(side),
-				new Knight(side),
-				new Queen(side)
+				new Rook(board, side),
+				new Bishop(board, side),
+				new Knight(board, side),
+				new Queen(board, side)
 		};
 
 		// Make the pieces above into buttons.

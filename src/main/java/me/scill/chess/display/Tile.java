@@ -173,9 +173,8 @@ public class Tile extends JButton implements ActionListener {
 			return;
 		}
 
-		StretchIcon icon = new StretchIcon(piece.getIcon().getImage());
-		SwingUtilities.invokeLater(() -> setIcon(icon));
-		SwingUtilities.invokeLater(() -> setPressedIcon(icon));
+		SwingUtilities.invokeLater(() -> setIcon(piece.getIcon()));
+		SwingUtilities.invokeLater(() -> setPressedIcon(piece.getIcon()));
 	}
 
 	public Board getBoard() {

@@ -12,8 +12,8 @@ public class King extends Piece {
 
 	private static Tile attemptedMove = null;
 
-	public King(Side side) {
-		super(side);
+	public King(Board board, Side side) {
+		super(board, side);
 	}
 
 	@Override

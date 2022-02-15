@@ -1,14 +1,15 @@
 package me.scill.chess.pieces;
 
 import me.scill.chess.Piece;
+import me.scill.chess.display.Board;
 import me.scill.chess.display.Tile;
 import me.scill.chess.display.UpgradePanel;
 import me.scill.chess.enums.Side;
 
 public class Pawn extends Piece {
 
-	public Pawn(Side side) {
-		super(side);
+	public Pawn(Board board, Side side) {
+		super(board, side);
 	}
 
 	@Override

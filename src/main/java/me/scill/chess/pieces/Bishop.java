@@ -1,13 +1,14 @@
 package me.scill.chess.pieces;
 
 import me.scill.chess.Piece;
+import me.scill.chess.display.Board;
 import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
 
 public class Bishop extends Piece {
 
-	public Bishop(Side side) {
-		super(side);
+	public Bishop(Board board, Side side) {
+		super(board, side);
 	}
 
 	@Override

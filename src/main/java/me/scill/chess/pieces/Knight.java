@@ -1,13 +1,14 @@
 package me.scill.chess.pieces;
 
 import me.scill.chess.Piece;
+import me.scill.chess.display.Board;
 import me.scill.chess.enums.Side;
 import me.scill.chess.display.Tile;
 
 public class Knight extends Piece {
 
-	public Knight(Side side) {
-		super(side);
+	public Knight(Board board, Side side) {
+		super(board, side);
 	}
 
 	@Override
