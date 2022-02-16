@@ -53,31 +53,28 @@ public class Tile extends JButton implements ActionListener {
 				if (selectedTile.getPiece() instanceof King)
 					((King) piece).checkForCastle(this);
 
+				piece.moved();
 				setPiece(piece);
-				getPiece().moved();
 				selectedTile.setPiece(null);
 
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				board.resetCheck();
-				board.checkForCheck(piece);
+				clearTilesInRange();
 
 				// Check if Pawn can upgrade.
 				if (getPiece() instanceof Pawn)
 					((Pawn) getPiece()).checkForUpgrade();
 
-				shouldHighlight = false;
+				board.resetCheck();
+				board.checkForCheck(getPiece());
 				board.nextTurn();
+
+				shouldHighlight = false;
 			}
 
 			// Removes the highlight and de-selects the selected tile.
 			selectedTile.setBackground(selectedColor);
 			selectedTile = null;
-
-			tilesInRange.forEach(t -> {
-				t.setDrawCircle(false);
-				t.repaint();
-			});
-			tilesInRange.clear();
+			clearTilesInRange();
 
 			// Return if the clicked-on tile shouldn't be highlighted.
 			if (!shouldHighlight)
@@ -148,6 +145,14 @@ public class Tile extends JButton implements ActionListener {
 			tile.repaint();
 			tilesInRange.add(tile);
 		}
+	}
+
+	private void clearTilesInRange() {
+		tilesInRange.forEach(t -> {
+			t.setDrawCircle(false);
+			t.repaint();
+		});
+		tilesInRange.clear();
 	}
 
 	public Piece getPiece() {
