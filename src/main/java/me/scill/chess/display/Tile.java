@@ -58,6 +58,7 @@ public class Tile extends JButton implements ActionListener {
 				selectedTile.setPiece(null);
 
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				selectedTile.setBackground(selectedColor);
 				clearTilesInRange();
 
 				// Check if Pawn can upgrade.
@@ -71,10 +72,13 @@ public class Tile extends JButton implements ActionListener {
 				shouldHighlight = false;
 			}
 
-			// Removes the highlight and de-selects the selected tile.
-			selectedTile.setBackground(selectedColor);
+			else {
+				// Removes the highlight and de-selects the selected tile.
+				selectedTile.setBackground(selectedColor);
+				clearTilesInRange();
+			}
+
 			selectedTile = null;
-			clearTilesInRange();
 
 			// Return if the clicked-on tile shouldn't be highlighted.
 			if (!shouldHighlight)

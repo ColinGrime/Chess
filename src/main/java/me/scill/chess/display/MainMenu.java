@@ -1,6 +1,7 @@
 package me.scill.chess.display;
 
 import me.scill.chess.enums.Font;
+import me.scill.chess.enums.Theme;
 import me.scill.chess.utilities.ResourceUtility;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ import java.awt.event.MouseListener;
 
 public class MainMenu extends JPanel {
 
+	private final Theme theme = Theme.Dark;
 	private final Display display;
 
 	public MainMenu(Display display) {
@@ -17,27 +19,18 @@ public class MainMenu extends JPanel {
 		setup();
 	}
 
-	protected void setup() {
+	private void setup() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setBackground(Color.decode("#E5E5DC"));
-
-//		// Creates a JLabel holding the chess logo.
-//		JLabel logo = new JLabel();
-//		logo.setAlignmentX(Component.CENTER_ALIGNMENT);
-//
-//		// Sets the image to the icon.
-//		Image image = ImageUtility.getImage("Logo.png", 200, 200);
-//		if (image != null)
-//			logo.setIcon(new ImageIcon(image));
+		setBackground(theme.getBackground());
 
 		// Adds JLabel text to the screen.
-		JLabel title = createText("Chess", Color.decode("#26495C"), Font.SourceSansPro, 200);
+		JLabel title = createText("Chess", theme.getPrimary(), Font.SourceSansPro, 200);
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		JButton singleplayer = createButton("Singleplayer", Color.decode("#C4A35A"), Font.Raleway, 75);
+		JButton singleplayer = createButton("Singleplayer", theme.getSecondary(), Font.Raleway, 75);
 		singleplayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		JButton multiplayer = createButton("Multiplayer", Color.decode("#C4A35A"), Font.Raleway, 75);
+		JButton multiplayer = createButton("Multiplayer", theme.getSecondary(), Font.Raleway, 75);
 		multiplayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		multiplayer.addActionListener(e -> display.displayChessboard());
 

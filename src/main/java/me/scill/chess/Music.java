@@ -18,9 +18,9 @@ public class Music extends Thread {
 	}
 
 	private final Random rng = new Random();
-	private final Song[] HOME_MUSIC = { Song.DevilPiano, Song.BeforeTheFight, Song.Lunokhod };
-	private final Song[] GAME_MUSIC = { Song.ImpatientlyWaiting, Song.OrNot };
-	private final Song[] INTENSE_MUSIC = { Song.ThePercussionist, Song.ThinWallsPercussion };
+	private final Song[] HOME_MUSIC = { Song.Lunokhod };
+	private final Song[] GAME_MUSIC = { Song.ImpatientlyWaiting, Song.OrNot, Song.DevilPiano  };
+	private final Song[] INTENSE_MUSIC = { Song.ThePercussionist, Song.ThinWallsPercussion, Song.BeforeTheFight };
 	private Status status = Status.HOME;
 
 	@Override
@@ -64,6 +64,9 @@ public class Music extends Thread {
 			// Open audio clip and start playing.
 			clip.open(audioIn);
 			clip.start();
+
+			String songName = song.name().replaceAll("(.)([A-Z])", "$1 $2");
+			System.out.println("Song currently playing: " + songName);
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			e.printStackTrace();
 		}
