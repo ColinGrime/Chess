@@ -69,7 +69,12 @@ public class Display extends JFrame {
 		long time = System.currentTimeMillis();
 
 		mainMenu.setVisible(false);
-		add(new Board(this, getContentPane().getSize()));
+
+		Board board = new Board();
+		board.setupDisplay(this, getContentPane().getSize());
+		board.display();
+
+		add(board);
 		revalidate();
 
 		music.setStatus(Music.Status.NORMAL);
