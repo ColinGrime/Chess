@@ -13,7 +13,7 @@ public abstract class Piece {
 
 	private final Board board;
 	private final Side side;
-	private final StretchIcon icon;
+	private StretchIcon icon;
 
 	private Tile tile;
 	private int timesMoved = 0;
@@ -21,10 +21,6 @@ public abstract class Piece {
 	public Piece(Board board, Side side) {
 		this.board = board;
 		this.side = side;
-
-		String path = side.name().toLowerCase() + "/" + getClass().getSimpleName() + ".png";
-		StretchIcon icon = board.getImage(path);
-		this.icon = icon != null ? icon : new StretchIcon(ResourceUtility.getImage(path, 512, 512));
 	}
 
 	public List<Tile> getMoves(Tile...whitelist) {
@@ -80,6 +76,12 @@ public abstract class Piece {
 	}
 
 	public ImageIcon getIcon() {
+		if (icon == null) {
+			String path = side.name().toLowerCase() + "/" + getClass().getSimpleName() + ".png";
+			StretchIcon icon = board.getImage(path);
+			this.icon = icon != null ? icon : new StretchIcon(ResourceUtility.getImage(path, 512, 512));
+		}
+
 		return icon;
 	}
 
