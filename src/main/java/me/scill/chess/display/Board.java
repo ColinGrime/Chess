@@ -18,54 +18,33 @@ public class Board extends JPanel {
 	private final Color MAIN = Color.decode("#cedef0"),
 						SECONDARY = Color.decode("#6b9bd1");
 
-	private final Display display;
-	private final Dimension size;
 	private final List<Tile> tiles = new ArrayList<>();
+	private final Map<Piece, List<Tile>> movesLeft = new HashMap<>();
 
-	private final UpgradePanel whiteUpgrades, blackUpgrades;
+	private Display display;
+	private Dimension size;
+	private UpgradePanel whiteUpgrades, blackUpgrades;
 
 	private Side currentTurn = Side.WHITE;
 	private Piece checkedKing = null, assassin = null;
-	private final Map<Piece, List<Tile>> movesLeft = new HashMap<>();
 
-	public Board(Display display, Dimension size) {
-		this.display = display;
-		this.size = new Dimension((int) size.getHeight() / 8, (int) size.getHeight() / 8);
-
-		setBackground(new Color(40, 44, 52));
-		setLayout(new GridBagLayout());
-
-		// Sets up the grid & puts the pieces on the board.
-		setupGrid();
-
+	public Board() {
+		createTiles();
 		createSide(Side.WHITE);
 		createSide(Side.BLACK);
-		whiteUpgrades = new UpgradePanel(this, Side.WHITE);
-		blackUpgrades = new UpgradePanel(this, Side.BLACK);
-
-		setVisible(true);
 	}
 
-	/**
-	 * Sets up the 8x8 chessboard.
+	/*
+	 * Creates all the Tiles.
 	 */
-	private void setupGrid() {
-		GridBagConstraints gbc = new GridBagConstraints();
+	private void createTiles() {
 		int index = 0;
 
 		for (int row=0; row<8; row++) {
 			for (char column='a'; column<'a'+8; column++) {
 				// Creates the Color for the Tile.
 				Color color = index++ % 2 == 0 ? MAIN : SECONDARY;
-				Tile position = new Tile(this, 8 - row, column, color);
-
-				// Sets the X and Y of the grid.
-				gbc.gridx = column;
-				gbc.gridy = row;
-
-				// Add the position to the board, and the panel to the display.
-				getTiles().add(position);
-				add(position, gbc);
+				tiles.add(new Tile(this, 8 - row, column, color));
 			}
 			index++;
 		}
@@ -105,39 +84,41 @@ public class Board extends JPanel {
 			getTile(row, column).setPiece(new Pawn(this, side));
 	}
 
+	public void setupDisplay(Display display, Dimension size) {
+		this.display = display;
+		this.size = new Dimension((int) size.getHeight() / 8, (int) size.getHeight() / 8);
+
+		setBackground(new Color(40, 44, 52));
+		setLayout(new GridBagLayout());
+
+		// Sets up the grid & puts the pieces on the board.
+		setupGrid();
+
+		whiteUpgrades = new UpgradePanel(this, Side.WHITE);
+		blackUpgrades = new UpgradePanel(this, Side.BLACK);
+	}
+
 	/**
-	 * Gets the position given the row and column.
-	 * @param row row of the board
-	 * @param column column of the board
-	 * @return the Tile object at the given row/column, or (1, A) if not found.
+	 * Sets up the 8x8 chessboard.
 	 */
-	public Tile getTile(int row, char column) {
-		for (Tile pos : tiles) {
-			if (pos.getRow() == row && pos.getColumn() == column)
-				return pos;
+	private void setupGrid() {
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		for (Tile tile : tiles) {
+			// Sets the X and Y of the grid.
+			gbc.gridx = tile.getColumn();
+			gbc.gridy = Math.abs(tile.getRow() - 8);
+
+			// Add the Tile to the board.
+			add(tile, gbc);
 		}
-
-		// If the tile isn't found, returns the first tile (bottom left).
-		return new Tile(this, 1, 'a');
 	}
 
-	public List<Tile> getTiles() {
-		return tiles;
-	}
+	public void display() {
+		if (display == null)
+			throw new IllegalStateException("Display not setup.");
 
-	public UpgradePanel getUpgrades(Side side) {
-		if (side == Side.WHITE)
-			return whiteUpgrades;
-
-		return blackUpgrades;
-	}
-
-	public Side getCurrentTurn() {
-		return currentTurn;
-	}
-
-	public void nextTurn() {
-		currentTurn = currentTurn == Side.WHITE ? Side.BLACK : Side.WHITE;
+		SwingUtilities.invokeLater(() -> setVisible(true));
 	}
 
 	/**
@@ -344,6 +325,52 @@ public class Board extends JPanel {
 		movesLeft.clear();
 	}
 
+	/**
+	 * Gets the position given the row and column.
+	 * @param row row of the board
+	 * @param column column of the board
+	 * @return the Tile object at the given row/column, or (1, A) if not found.
+	 */
+	public Tile getTile(int row, char column) {
+		for (Tile tile : tiles) {
+			if (tile.getRow() == row && tile.getColumn() == column)
+				return tile;
+		}
+
+		// If the tile isn't found, returns the first tile (bottom left).
+		return new Tile(this, 1, 'a');
+	}
+
+	public List<Tile> getTiles() {
+		return tiles;
+	}
+
+	public int getPiecesLeft() {
+		int piecesLeft = 0;
+
+		for (Tile tile : tiles) {
+			if (tile.getPiece() != null)
+				piecesLeft++;
+		}
+
+		return piecesLeft;
+	}
+
+	public UpgradePanel getUpgrades(Side side) {
+		if (side == Side.WHITE)
+			return whiteUpgrades;
+
+		return blackUpgrades;
+	}
+
+	public Side getCurrentTurn() {
+		return currentTurn;
+	}
+
+	public void nextTurn() {
+		currentTurn = currentTurn == Side.WHITE ? Side.BLACK : Side.WHITE;
+	}
+
 	public Piece getCheckedKing() {
 		return checkedKing;
 	}
@@ -368,6 +395,9 @@ public class Board extends JPanel {
 	}
 
 	public StretchIcon getImage(String image) {
+		if (display == null || display.getImageLoader() == null)
+			return null;
+
 		return display.getImageLoader().getImages().get(image);
 	}
 }
