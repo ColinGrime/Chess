@@ -7,7 +7,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_16
 }
 
-group = 'me.scill.chess'
+group = 'me.colin.chess'
 version = '1.0.0-alpha'
 
 repositories {
@@ -21,12 +21,12 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:4.0.0'
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'me.scill.chess.Chess'
-    }
-}
-
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.colin.chess.Chess'
+    }
 }
