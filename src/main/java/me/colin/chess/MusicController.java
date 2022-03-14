@@ -55,7 +55,7 @@ public class MusicController extends Thread {
 		};
 
 		// If the song just played, find another.
-		if (song == justPlayed) {
+		if (song != Song.Lunokhod && song == justPlayed) {
 			playMusic(justPlayed);
 			return;
 		}
